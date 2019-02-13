@@ -43,7 +43,6 @@ class _TodayExpenseState extends State<TodayExpense> {
           loading = false;
         });
       } else {
-        print(value[0].date);
         var total = 0.0;
         for (var item in value) {
           total += item.amount;

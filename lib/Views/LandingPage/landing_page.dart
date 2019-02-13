@@ -50,16 +50,12 @@ class _LandingPageState extends State<LandingPage> {
     ];
   }
 
-  Future<bool> _exitApp() {
-    exit(0);
-  }
-
   @override
   Widget build(BuildContext context) {
     var device = MediaQuery.of(context).size;
     var actualHeight = device.height - 24 - kToolbarHeight;
     return WillPopScope(
-      onWillPop: _exitApp,
+      onWillPop: () {exit(0);},
           child: OrientationBuilder(
         builder: (context, orientation) {
           return Theme(
