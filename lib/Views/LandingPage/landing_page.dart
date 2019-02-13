@@ -16,38 +16,60 @@ class _LandingPageState extends State<LandingPage> {
   final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
   var dateFormat = DateFormat("dd MM yyyy");
+  var last7dateFormat = DateFormat("yyyy-MM-dd");
+  var displayDateFormat = DateFormat("dd MMM");
   var chart;
   var series;
   var loading = false;
+  var _chartLoading = true;
   var item;
   var price;
+  List<Expense> totalAmtList = [];
+  DBProvider dbProvider = DBProvider();
+  List<String> dtList = [];
+  List<String> setDateList = [];
 
   @override
   void initState() {
     super.initState();
-    DBProvider dbProvider = DBProvider();
     dbProvider.initDb();
     _charts();
   }
 
-  _charts() {
-    var data = [
-      Expense(date: '24 Jan', amount: 12500),
-      Expense(date: '25 Jan', amount: 5000),
-      Expense(date: '26 Jan', amount: 2450),
-      Expense(date: '27 Jan', amount: 10500),
-      Expense(date: '28 Jan', amount: 4300),
-      Expense(date: '29 Jan', amount: 2200),
-      Expense(date: '30 Jan', amount: 12500),
-    ];
+  _getLastSevenExpense() async {
+    for (var i = 0; i < 7; i++) {
+      var date = last7dateFormat.format(DateTime.now().subtract(Duration(days: i)));
+      var setDate = displayDateFormat.format(DateTime.now().subtract(Duration(days: i)));
+       await dbProvider.lastSevenDays(date).then((data) {
+        var totalAmt = 0.0;
+          for (var item in data) {
+              if(date == item.date){
+                totalAmt += item.amount;
+              }
+            }
+            var exp = Expense(
+              amount: totalAmt,
+              date: setDate,
+            );
+          totalAmtList.add(exp);
+        }
+      );
+    }
+  }
+
+  _charts() async {
+    await _getLastSevenExpense();
     series = [
       charts.Series(
           domainFn: (Expense expense, _) => expense.date,
           measureFn: (Expense expense, _) => expense.amount,
           colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
           id: 'Expense',
-          data: data)
+          data: totalAmtList)
     ];
+    setState(() {
+     _chartLoading = false; 
+    });
   }
 
   @override
@@ -110,7 +132,10 @@ class _LandingPageState extends State<LandingPage> {
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 12.0, vertical: 12.0),
-                                    child: charts.BarChart(
+                                    child: _chartLoading == true ? Center(
+                                      child: CircularProgressIndicator(),
+                                    ) :
+                                    charts.BarChart(
                                       series,
                                       domainAxis: new charts.OrdinalAxisSpec(
                                           renderSpec:

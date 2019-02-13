@@ -76,4 +76,21 @@ class DBProvider {
     }
     return expenseList;
   }
+
+  Future<List<Expense>> lastSevenDays(String date) async {
+    var dbClient = await _db;
+    List<Map> list = await dbClient.rawQuery(
+        "SELECT * FROM expense WHERE date = '$date' ORDER BY id DESC");
+    List<Expense> expenseList = List();
+    for (var i = 0; i < list.length; i++) {
+      expenseList.add(Expense(
+          id: list[i]['id'],
+          item: list[i]['item'],
+          amount: list[i]['price'],
+          category: list[i]['category'],
+          date: list[i]['date'],
+          year: list[i]['year']));
+    }
+    return expenseList;
+  }
 }
