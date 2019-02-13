@@ -127,7 +127,7 @@ class _AddExpenseState extends State<AddExpense> {
                       item.text.length == 0 ? 'Please enter item name' : null,
                   keyboardType: TextInputType.text,
                   style: TextStyle(color: Colors.white70),
-                  textCapitalization: TextCapitalization.sentences,
+                  textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent)),
