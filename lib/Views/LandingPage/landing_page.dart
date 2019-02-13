@@ -28,6 +28,7 @@ class _LandingPageState extends State<LandingPage> {
   DBProvider dbProvider = DBProvider();
   List<String> dtList = [];
   List<String> setDateList = [];
+  var noCharts = false;
 
   @override
   void initState() {
@@ -59,17 +60,17 @@ class _LandingPageState extends State<LandingPage> {
 
   _charts() async {
     await _getLastSevenExpense();
-    series = [
-      charts.Series(
-          domainFn: (Expense expense, _) => expense.date,
-          measureFn: (Expense expense, _) => expense.amount,
-          colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-          id: 'Expense',
-          data: totalAmtList)
-    ];
-    setState(() {
-     _chartLoading = false; 
-    });
+      series = [
+        charts.Series(
+            domainFn: (Expense expense, _) => expense.date,
+            measureFn: (Expense expense, _) => expense.amount,
+            colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+            id: 'Expense',
+            data: totalAmtList)
+      ];
+      setState(() {
+      _chartLoading = false; 
+      });
   }
 
   @override
@@ -134,6 +135,8 @@ class _LandingPageState extends State<LandingPage> {
                                         horizontal: 12.0, vertical: 12.0),
                                     child: _chartLoading == true ? Center(
                                       child: CircularProgressIndicator(),
+                                    ) : noCharts == true ? Center(
+                                      child: Text("No Data"),
                                     ) :
                                     charts.BarChart(
                                       series,

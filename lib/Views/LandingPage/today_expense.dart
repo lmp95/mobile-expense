@@ -191,7 +191,7 @@ class _TodayExpenseState extends State<TodayExpense> {
     var device = MediaQuery.of(context).size;
     return Container(
       height: device.height <= 600 && orientation == Orientation.portrait
-          ? actualHeight / 2.5
+          ? actualHeight / 2
           : orientation == Orientation.landscape
               ? actualHeight / 1.2
               : actualHeight / 2.5,
