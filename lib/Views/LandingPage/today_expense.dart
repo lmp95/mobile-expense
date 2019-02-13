@@ -19,6 +19,7 @@ class _TodayExpenseState extends State<TodayExpense> {
   final actualHeight;
   _TodayExpenseState({this.orientation, this.actualHeight});
 
+  final SlidableController slidableController = new SlidableController();
   var price;
   var item;
   var finalAmt;
@@ -68,13 +69,18 @@ class _TodayExpenseState extends State<TodayExpense> {
               ),
               actions: <Widget>[
                 FlatButton(
-                  child: Text("Yes".toUpperCase()),
+                  child: Text(
+                    "Yes".toUpperCase(),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 FlatButton(
-                  child: Text("No".toUpperCase()),
+                  child: Text(
+                    "No".toUpperCase(),
+                    style: TextStyle(color: Colors.grey[800]),
+                  ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -121,6 +127,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                             itemCount: snap.data.length,
                             itemBuilder: (context, i) {
                               return Slidable(
+                                controller: slidableController,
                                 delegate: SlidableDrawerDelegate(),
                                 actionExtentRatio: 0.2,
                                 child: Container(

@@ -3,6 +3,7 @@ import 'package:flutter_calendar/flutter_calendar.dart';
 import 'package:intl/intl.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class History extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
+  final SlidableController slidableController = SlidableController();
   var selectedDate;
   var queryDate;
   var random;
@@ -129,27 +131,64 @@ class _HistoryState extends State<History> {
                         ? ListView.builder(
                             itemCount: _listExp.length,
                             itemBuilder: (context, i) {
-                              return Container(
-                                child: ListTile(
-                                  title: Text(
-                                    _listExp[i].item,
-                                    style: TextStyle(
-                                        color: Colors.black87, fontSize: 18.0),
-                                  ),
-                                  subtitle: Text(
-                                    _listExp[i].category,
-                                    style: TextStyle(
-                                      color: Colors.black38,
-                                      fontWeight: FontWeight.bold,
+                              return Slidable(
+                                controller: slidableController,
+                                closeOnScroll: false,
+                                actionExtentRatio: 0.125,
+                                delegate: SlidableDrawerDelegate(),
+                                child: Container(
+                                  child: ListTile(
+                                    title: Text(
+                                      _listExp[i].item,
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 18.0),
+                                    ),
+                                    subtitle: Text(
+                                      _listExp[i].category,
+                                      style: TextStyle(
+                                        color: Colors.black38,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    trailing: Text(
+                                      _listExp[i].amount.toString(),
+                                      style: TextStyle(
+                                          color: Colors.redAccent,
+                                          fontSize: 17.0),
                                     ),
                                   ),
-                                  trailing: Text(
-                                    _listExp[i].amount.toString(),
-                                    style: TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 17.0),
-                                  ),
                                 ),
+                                secondaryActions: <Widget>[
+                                  SlideAction(
+                                    child: Container(
+                                      padding: EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50.0),
+                                          color: Colors.grey[350]),
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                        size: 24.0,
+                                      ),
+                                    ),
+                                  ),
+                                  SlideAction(
+                                    child: Container(
+                                      padding: EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50.0),
+                                          color: Colors.redAccent),
+                                      child: Icon(
+                                        Icons.delete_outline,
+                                        color: Colors.white,
+                                        size: 24.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               );
                             },
                           )
