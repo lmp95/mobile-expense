@@ -97,125 +97,140 @@ class _HistoryState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('History'),
-        ),
-        body: Column(
-          children: <Widget>[
-            Theme(
-              data: ThemeData(
-                primarySwatch: Colors.red,
-              ),
-              child: Calendar(
-                onDateSelected: (value) {
-                  changedDate(value);
-                },
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(16.0),
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                selectedDate.toUpperCase(),
-                style: TextStyle(fontSize: 18.0),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                child: _loading == true
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : _listExp.length != 0
-                        ? ListView.builder(
-                            itemCount: _listExp.length,
-                            itemBuilder: (context, i) {
-                              return Slidable(
-                                controller: slidableController,
-                                closeOnScroll: false,
-                                actionExtentRatio: 0.125,
-                                delegate: SlidableDrawerDelegate(),
-                                child: Container(
-                                  child: ListTile(
-                                    title: Text(
-                                      _listExp[i].item,
-                                      style: TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: 18.0),
-                                    ),
-                                    subtitle: Text(
-                                      _listExp[i].category,
-                                      style: TextStyle(
-                                        color: Colors.black38,
-                                        fontWeight: FontWeight.bold,
+    var devHeight = MediaQuery.of(context).size.height - kToolbarHeight - 24;
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('History'),
+          ),
+          body: SingleChildScrollView(
+            child: Container(
+              height: orientation == Orientation.portrait
+                  ? devHeight
+                  : MediaQuery.of(context).size.longestSide / 1.4,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Theme(
+                    data: ThemeData(
+                      primarySwatch: Colors.red,
+                    ),
+                    child: Calendar(
+                      onDateSelected: (value) {
+                        changedDate(value);
+                      },
+                    ),
+                  ),
+                  Container(
+                    color: Colors.black54,
+                    padding: EdgeInsets.all(16.0),
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      selectedDate.toUpperCase(),
+                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: _loading == true
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : _listExp.length != 0
+                              ? ListView.builder(
+                                  itemCount: _listExp.length,
+                                  itemBuilder: (context, i) {
+                                    return Slidable(
+                                      controller: slidableController,
+                                      closeOnScroll: false,
+                                      actionExtentRatio: 0.125,
+                                      delegate: SlidableDrawerDelegate(),
+                                      child: Container(
+                                        child: ListTile(
+                                          title: Text(
+                                            _listExp[i].item,
+                                            style: TextStyle(
+                                                color: Colors.black87,
+                                                fontSize: 18.0),
+                                          ),
+                                          subtitle: Text(
+                                            _listExp[i].category,
+                                            style: TextStyle(
+                                              color: Colors.black38,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          trailing: Text(
+                                            _listExp[i].amount.toString(),
+                                            style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontSize: 17.0),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    trailing: Text(
-                                      _listExp[i].amount.toString(),
-                                      style: TextStyle(
-                                          color: Colors.redAccent,
-                                          fontSize: 17.0),
+                                      secondaryActions: <Widget>[
+                                        SlideAction(
+                                          child: Container(
+                                            padding: EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                                color: Colors.grey[350]),
+                                            child: Icon(
+                                              Icons.edit,
+                                              color: Colors.white,
+                                              size: 24.0,
+                                            ),
+                                          ),
+                                        ),
+                                        SlideAction(
+                                          child: Container(
+                                            padding: EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                                color: Colors.redAccent),
+                                            child: Icon(
+                                              Icons.delete_outline,
+                                              color: Colors.white,
+                                              size: 24.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                )
+                              : Center(
+                                  child: Text(
+                                    "No History",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18.0,
                                     ),
                                   ),
                                 ),
-                                secondaryActions: <Widget>[
-                                  SlideAction(
-                                    child: Container(
-                                      padding: EdgeInsets.all(8.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50.0),
-                                          color: Colors.grey[350]),
-                                      child: Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                        size: 24.0,
-                                      ),
-                                    ),
-                                  ),
-                                  SlideAction(
-                                    child: Container(
-                                      padding: EdgeInsets.all(8.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50.0),
-                                          color: Colors.redAccent),
-                                      child: Icon(
-                                        Icons.delete_outline,
-                                        color: Colors.white,
-                                        size: 24.0,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          )
-                        : Center(
-                            child: Text(
-                              "No History",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          ),
+                    ),
+                  ),
+                  Container(
+                      color: Colors.redAccent,
+                      child: ListTile(
+                        title: Text(
+                          "Total",
+                          style: TextStyle(color: Colors.white, fontSize: 17.0),
+                        ),
+                        trailing: Text(
+                          priceTotal.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 17.0),
+                        ),
+                      )),
+                ],
               ),
             ),
-            Container(
-                color: Colors.redAccent,
-                child: ListTile(
-                  title: Text(
-                    "Total",
-                    style: TextStyle(color: Colors.white, fontSize: 17.0),
-                  ),
-                  trailing: Text(
-                    priceTotal.toString(),
-                    style: TextStyle(color: Colors.white, fontSize: 17.0),
-                  ),
-                ))
-          ],
-        ));
+          ),
+        );
+      },
+    );
   }
 }
