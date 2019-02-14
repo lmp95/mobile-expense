@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
-import '../../Views/LandingPage/landing_page.dart';
+import '../../Views/ExpenseHistory/history.dart';
+import 'package:intl/intl.dart';
 
-class AddExpense extends StatefulWidget {
-  final orientation;
-  final actualHeight;
-  AddExpense({this.orientation, this.actualHeight});
+class AddHistoryExpense extends StatefulWidget {
+  final selectedDate;
+  AddHistoryExpense({this.selectedDate});
   @override
-  _AddExpenseState createState() => _AddExpenseState();
+  _AddHistoryExpenseState createState() =>
+      _AddHistoryExpenseState(selectedDate: selectedDate);
 }
 
-class _AddExpenseState extends State<AddExpense> {
+class _AddHistoryExpenseState extends State<AddHistoryExpense> {
+  final selectedDate;
+  _AddHistoryExpenseState({this.selectedDate});
   final _expAddFormKey = GlobalKey<FormState>();
   TextEditingController amount = TextEditingController();
   TextEditingController item = TextEditingController();
+  DateFormat _dateFormat = DateFormat('dd MMM yyyy');
   String choiceCate;
   var error = false;
   List<String> _cateList = [
     'Clothing',
-    'Entertainment',
+    'Entertainment ',
     'Food',
     'Gifts/Donations',
     'Medical/Healthcare',
@@ -64,13 +68,12 @@ class _AddExpenseState extends State<AddExpense> {
       expense.item = item.text;
       expense.amount = double.parse(amount.text);
       expense.category = choiceCate;
-      expense.date = DateTime.now()
-          .toString()
-          .substring(0, DateTime.now().toString().indexOf(' '));
-      expense.year = DateTime.now().year.toString();
+      expense.date = _dateFormat.parse(selectedDate).toString().substring(
+          0, _dateFormat.parse(selectedDate).toString().indexOf(' '));
+      expense.year = _dateFormat.parse(selectedDate).year.toString();
       db.addExpense(expense);
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => LandingPage()));
+          MaterialPageRoute(builder: (BuildContext context) => History()));
     }
   }
 
@@ -92,6 +95,14 @@ class _AddExpenseState extends State<AddExpense> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Text(
+                  selectedDate,
+                  style: TextStyle(color: Colors.white, fontSize: 18.0),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
                 child: TextFormField(
