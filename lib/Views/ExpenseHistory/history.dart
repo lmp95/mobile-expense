@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class History extends StatefulWidget {
   @override
@@ -22,10 +23,12 @@ class _HistoryState extends State<History> {
   List<Expense> _listExp = [];
   var _loading = true;
   var priceTotal = 0.0;
+  var series;
 
   @override
   void initState() {
     super.initState();
+    _charts();
     random = 0;
     selectedDate = _dateFormat.format(DateTime.now()).toString();
     queryDate = _queryDateFormat.format(DateTime.now());
@@ -75,7 +78,6 @@ class _HistoryState extends State<History> {
       } else {
         setState(() {
           _loading = false;
-          print("No History");
         });
       }
     });
@@ -93,6 +95,123 @@ class _HistoryState extends State<History> {
         });
       });
     });
+  }
+
+  _deleteDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Delete Expense"),
+              content: Text("Are you sure to delete?"),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(
+                    "Yes".toUpperCase(),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text(
+                    "No".toUpperCase(),
+                    style: TextStyle(color: Colors.grey[800]),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
+  }
+
+  _charts() {
+    var data = [
+      new Expense(category: 'Clothing', amount: 2350.0),
+      new Expense(category: 'Entertainment', amount: 3200.0),
+      new Expense(category: 'Food', amount: 1200.0),
+      new Expense(category: 'Gifts/Donations', amount: 3000.0),
+      new Expense(category: 'Medical/Healthcare', amount: 1000.0),
+      new Expense(category: 'Personal', amount: 2100.0),
+      new Expense(category: 'Transportation', amount: 500.0),
+      new Expense(category: 'Utilities', amount: 3400.0),
+    ];
+    series = [
+      new charts.Series<Expense, String>(
+          id: 'Sales',
+          domainFn: (Expense sales, _) => sales.category,
+          measureFn: (Expense sales, _) => sales.amount,
+          data: data,
+          labelAccessorFn: (Expense sales, _) =>
+              '${sales.category}: \$${sales.amount.toString()}')
+    ];
+  }
+
+  _showChart(String selectedDate) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            titlePadding: EdgeInsets.all(0.0),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Container(
+              decoration: BoxDecoration(
+                  color: Colors.black87,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10.0),
+                      topRight: Radius.circular(10.0))),
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                selectedDate,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    child: charts.BarChart(
+                      series,
+                      vertical: false,
+                      barRendererDecorator:
+                          new charts.BarLabelDecorator<String>(),
+                      domainAxis: new charts.OrdinalAxisSpec(
+                          renderSpec: new charts.NoneRenderSpec()),
+                    ),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10.0),
+                          bottomRight: Radius.circular(10.0))),
+                  width: 1000.0,
+                  child: FlatButton(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Close",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            contentPadding: EdgeInsets.all(0.0),
+          );
+        });
   }
 
   @override
@@ -123,12 +242,36 @@ class _HistoryState extends State<History> {
                     ),
                   ),
                   Container(
-                    color: Colors.black54,
-                    padding: EdgeInsets.all(16.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     alignment: AlignmentDirectional.centerStart,
-                    child: Text(
-                      selectedDate.toUpperCase(),
-                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedDate.toUpperCase(),
+                          style:
+                              TextStyle(fontSize: 18.0, color: Colors.black87),
+                        ),
+                        Container(
+                          child: IconButton(
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            iconSize: 28.0,
+                            onPressed: () {
+                              _showChart(selectedDate);
+                            },
+                            icon: Icon(Icons.show_chart),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Divider(
+                      color: Colors.black,
+                      height: 1.5,
                     ),
                   ),
                   Expanded(
@@ -185,6 +328,7 @@ class _HistoryState extends State<History> {
                                           ),
                                         ),
                                         SlideAction(
+                                          onTap: _deleteDialog,
                                           child: Container(
                                             padding: EdgeInsets.all(8.0),
                                             decoration: BoxDecoration(

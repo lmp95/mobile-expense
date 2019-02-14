@@ -58,37 +58,6 @@ class _TodayExpenseState extends State<TodayExpense> {
     });
   }
 
-  _deleteDialog() {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text("Delete Expense"),
-              content: Text("Are you sure to delete?"),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    "Yes".toUpperCase(),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                FlatButton(
-                  child: Text(
-                    "No".toUpperCase(),
-                    style: TextStyle(color: Colors.grey[800]),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
-  }
-
   void _showModalSheet() {
     showModalBottomSheet(
         context: context,
@@ -126,34 +95,14 @@ class _TodayExpenseState extends State<TodayExpense> {
                           child: ListView.builder(
                             itemCount: snap.data.length,
                             itemBuilder: (context, i) {
-                              return Slidable(
-                                controller: slidableController,
-                                delegate: SlidableDrawerDelegate(),
-                                actionExtentRatio: 0.2,
-                                child: Container(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 12.0),
-                                  child: ListTile(
-                                    title: Text(snap.data[i].item),
-                                    subtitle: Text(snap.data[i].category),
-                                    trailing:
-                                        Text(snap.data[i].amount.toString()),
-                                  ),
+                              return Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                                child: ListTile(
+                                  title: Text(snap.data[i].item),
+                                  subtitle: Text(snap.data[i].category),
+                                  trailing:
+                                      Text(snap.data[i].amount.toString()),
                                 ),
-                                secondaryActions: <Widget>[
-                                  new IconSlideAction(
-                                    caption: 'Edit',
-                                    color: Colors.black45,
-                                    icon: Icons.edit,
-                                    onTap: () {},
-                                  ),
-                                  new IconSlideAction(
-                                    caption: 'Delete',
-                                    color: Colors.red,
-                                    icon: Icons.delete,
-                                    onTap: _deleteDialog,
-                                  ),
-                                ],
                               );
                             },
                           ),
