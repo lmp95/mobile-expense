@@ -4,17 +4,19 @@ import '../../Models/Expense/expense.dart';
 import '../../Views/ExpenseHistory/history.dart';
 import 'package:intl/intl.dart';
 
-class AddHistoryExpense extends StatefulWidget {
+class EditHistoryExpense extends StatefulWidget {
   final selectedDate;
-  AddHistoryExpense({this.selectedDate});
+  final Expense expense;
+  EditHistoryExpense({this.selectedDate, this.expense});
   @override
-  _AddHistoryExpenseState createState() =>
-      _AddHistoryExpenseState(selectedDate: selectedDate);
+  _EditHistoryExpenseState createState() =>
+      _EditHistoryExpenseState(selectedDate: selectedDate, expense: expense);
 }
 
-class _AddHistoryExpenseState extends State<AddHistoryExpense> {
+class _EditHistoryExpenseState extends State<EditHistoryExpense> {
   final selectedDate;
-  _AddHistoryExpenseState({this.selectedDate});
+  final Expense expense;
+  _EditHistoryExpenseState({this.selectedDate, this.expense});
   final _expAddFormKey = GlobalKey<FormState>();
   TextEditingController amount = TextEditingController();
   TextEditingController item = TextEditingController();
@@ -35,6 +37,11 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      amount.text = expense.amount.toString();
+      item.text = expense.item;
+      choiceCate = expense.category;
+    });
   }
 
   _setCate(String value) {
@@ -64,14 +71,15 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
       });
       _expAddFormKey.currentState.save();
       var db = DBProvider();
-      var expense = Expense();
-      expense.item = item.text;
-      expense.amount = double.parse(amount.text);
-      expense.category = choiceCate;
-      expense.date = _dateFormat.parse(selectedDate).toString().substring(
+      var exp = Expense();
+      exp.id = expense.id;
+      exp.item = item.text;
+      exp.amount = double.parse(amount.text);
+      exp.category = choiceCate;
+      exp.date = _dateFormat.parse(selectedDate).toString().substring(
           0, _dateFormat.parse(selectedDate).toString().indexOf(' '));
-      expense.year = _dateFormat.parse(selectedDate).year.toString();
-      db.addExpense(expense);
+      exp.year = _dateFormat.parse(selectedDate).year.toString();
+      db.updateExpense(exp);
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(

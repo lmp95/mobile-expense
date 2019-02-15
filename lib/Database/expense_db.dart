@@ -93,4 +93,20 @@ class DBProvider {
     }
     return expenseList;
   }
+
+  void updateExpense(Expense expense) async {
+    var dbClient = await _db;
+    await dbClient.transaction((txn) async {
+      await txn.update("expense", expense.toMap(),
+          where: "id = ?", whereArgs: [expense.id]);
+    });
+  }
+
+  void deleteExpense(int expenseID) async {
+    var dbClient = await _db;
+    await dbClient.transaction((txn) async {
+      return await txn
+          .delete("expense", where: "id = ?", whereArgs: [expenseID]);
+    });
+  }
 }

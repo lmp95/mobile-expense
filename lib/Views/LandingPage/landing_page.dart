@@ -185,7 +185,7 @@ class _LandingPageState extends State<LandingPage> {
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext context) => History()
+                    builder: (BuildContext context) => History(initialDate: DateTime.now(),)
                   ));
                 },
                 child: Icon(Icons.history),

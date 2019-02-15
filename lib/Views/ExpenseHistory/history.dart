@@ -7,17 +7,21 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import '../../Views/ExpenseHistory/add_history_expense.dart';
 import '../../Views/LandingPage/landing_page.dart';
+import '../../Views/ExpenseHistory/edit_history_expense.dart';
 
 class History extends StatefulWidget {
+  final DateTime initialDate;
+  History({this.initialDate});
   @override
-  _HistoryState createState() => _HistoryState();
+  _HistoryState createState() => _HistoryState(initialDate: initialDate);
 }
 
 class _HistoryState extends State<History> {
+  final DateTime initialDate;
+  _HistoryState({this.initialDate});
   final SlidableController slidableController = SlidableController();
   var selectedDate;
   var queryDate;
-  var random;
   DateFormat _dateFormat = DateFormat('dd MMM yyyy');
   DateFormat _queryDateFormat = DateFormat('yyyy-MM-dd');
   var db = DBProvider();
@@ -32,30 +36,9 @@ class _HistoryState extends State<History> {
   @override
   void initState() {
     super.initState();
-    random = 0;
-    selectedDate = _dateFormat.format(DateTime.now()).toString();
-    queryDate = _queryDateFormat.format(DateTime.now());
-    var data = db.historyExpense(queryDate);
-    data.then((value) {
-      if (value.length != null) {
-        for (var item in value) {
-          priceTotal += item.amount;
-          _expense = Expense(
-            id: item.id,
-            item: item.item,
-            category: item.category,
-            amount: item.amount,
-            date: item.date,
-            year: item.year,
-          );
-          _listExp.add(_expense);
-        }
-        _charts();
-        setState(() {
-          _loading = false;
-        });
-      }
-    });
+    selectedDate = _dateFormat.format(initialDate).toString();
+    queryDate = _queryDateFormat.format(initialDate);
+    _getHistory(queryDate);
   }
 
   _getHistory(String date) {
@@ -262,7 +245,7 @@ class _HistoryState extends State<History> {
         });
   }
 
-  _deleteDialog() {
+  _deleteDialog(int deleteID) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -277,7 +260,13 @@ class _HistoryState extends State<History> {
                     "Yes".toUpperCase(),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    db.deleteExpense(deleteID);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => History(
+                                  initialDate: _dateFormat.parse(selectedDate),
+                                )));
                   },
                 ),
                 FlatButton(
@@ -286,7 +275,7 @@ class _HistoryState extends State<History> {
                     style: TextStyle(color: Colors.grey[800]),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -330,6 +319,7 @@ class _HistoryState extends State<History> {
                         primarySwatch: Colors.red,
                       ),
                       child: Calendar(
+                        initialCalendarDateOverride: initialDate,
                         onDateSelected: (value) {
                           changedDate(value);
                         },
@@ -435,6 +425,19 @@ class _HistoryState extends State<History> {
                                         ),
                                         secondaryActions: <Widget>[
                                           SlideAction(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          EditHistoryExpense(
+                                                            selectedDate:
+                                                                selectedDate,
+                                                            expense:
+                                                                _listExp[i],
+                                                          )));
+                                            },
                                             child: Container(
                                               padding: EdgeInsets.all(8.0),
                                               decoration: BoxDecoration(
@@ -450,7 +453,9 @@ class _HistoryState extends State<History> {
                                             ),
                                           ),
                                           SlideAction(
-                                            onTap: _deleteDialog,
+                                            onTap: () {
+                                              _deleteDialog(_listExp[i].id);
+                                            },
                                             child: Container(
                                               padding: EdgeInsets.all(8.0),
                                               decoration: BoxDecoration(
