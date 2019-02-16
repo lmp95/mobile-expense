@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import '../Models/Expense/expense.dart';
 import 'package:intl/intl.dart';
+import '../Models/Income/income.dart';
 
 class DBProvider {
   static Database _database;
@@ -32,7 +33,14 @@ class DBProvider {
       category TEXT NOT NULL,
       date TEXT NOT NULL,
       year TEXT NOT NULL)""");
-    print("Expense Table Created");
+
+    await db.execute("""CREATE TABLE income(
+      id INTEGER PRIMARY KEY autoincrement,
+      description TEXT NOT NULL,
+      price REAL NOT NULL,
+      date TEXT NOT NULL,
+      month TEXT NOT NULL,
+      year TEXT NOT NULL)""");
   }
 
   Future<void> addExpense(Expense expense) async {
@@ -77,6 +85,24 @@ class DBProvider {
     return expenseList;
   }
 
+  Future<List<Expense>> specificDateRangeExpense(
+      String startDate, endDate) async {
+    var dbClient = await _db;
+    List<Map> specificDateList = await dbClient.rawQuery(
+        "SELECT * FROM expense WHERE date BETWEEN '$startDate' AND '$endDate' ORDER BY date");
+    List<Expense> expenseList = List();
+    for (var i = 0; i < specificDateList.length; i++) {
+      expenseList.add(Expense(
+          id: specificDateList[i]['id'],
+          item: specificDateList[i]['item'],
+          amount: specificDateList[i]['price'],
+          category: specificDateList[i]['category'],
+          date: specificDateList[i]['date'],
+          year: specificDateList[i]['year']));
+    }
+    return expenseList;
+  }
+
   Future<List<Expense>> lastSevenDays(String date) async {
     var dbClient = await _db;
     List<Map> list = await dbClient.rawQuery(
@@ -108,5 +134,23 @@ class DBProvider {
       return await txn
           .delete("expense", where: "id = ?", whereArgs: [expenseID]);
     });
+  }
+
+  Future<List<Income>> getMonthlyIncome() async {
+    var thisMonth = DateTime.now().month;
+    var dbClient = await _db;
+    List<Map> list = await dbClient.rawQuery(
+        "SELECT * FROM income WHERE month = '$thisMonth' ORDER BY id DESC");
+    List<Income> monthlyIncomeList = List();
+    for (var i = 0; i < list.length; i++) {
+      monthlyIncomeList.add(Income(
+          id: list[i]['id'],
+          description: list[i]['description'],
+          amount: list[i]['price'],
+          date: list[i]['date'],
+          month: list[i]['month'],
+          year: list[i]['year']));
+    }
+    return monthlyIncomeList;
   }
 }

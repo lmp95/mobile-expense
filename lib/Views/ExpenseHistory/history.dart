@@ -8,6 +8,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import '../../Views/ExpenseHistory/add_history_expense.dart';
 import '../../Views/LandingPage/landing_page.dart';
 import '../../Views/ExpenseHistory/edit_history_expense.dart';
+import '../../Views/ExpenseHistory/daily_chart.dart';
 
 class History extends StatefulWidget {
   final DateTime initialDate;
@@ -59,6 +60,7 @@ class _HistoryState extends State<History> {
           );
           _listExp.add(_expense);
         }
+        dataList = dailyChartFunction(_listExp);
         _charts();
         setState(() {
           _chart = true;
@@ -87,74 +89,16 @@ class _HistoryState extends State<History> {
     });
   }
 
-  _chartFunction() {
-    dataList.clear();
-    var clothingTotal = 0.0;
-    var entertainmentTotal = 0.0;
-    var foodTotal = 0.0;
-    var giftsTotal = 0.0;
-    var healthTotal = 0.0;
-    var personalTotal = 0.0;
-    var transTotal = 0.0;
-    var utilitiesTotal = 0.0;
-    var clothdata = _listExp.where((cate) => cate.category == "Clothing");
-    var enterdata = _listExp.where((cate) => cate.category == "Entertainment");
-    var fooddata = _listExp.where((cate) => cate.category == "Food");
-    var giftsdata =
-        _listExp.where((cate) => cate.category == "Gifts/Donations");
-    var healthdata =
-        _listExp.where((cate) => cate.category == "Medical/Healthcare");
-    var personaldata = _listExp.where((cate) => cate.category == "Personal");
-    var transdata = _listExp.where((cate) => cate.category == "Transportation");
-    var utitilitiesdata =
-        _listExp.where((cate) => cate.category == "Utilities");
-    for (var item in clothdata) {
-      clothingTotal += item.amount;
-    }
-    for (var item in enterdata) {
-      entertainmentTotal += item.amount;
-    }
-    for (var item in fooddata) {
-      foodTotal += item.amount;
-    }
-    for (var item in giftsdata) {
-      giftsTotal += item.amount;
-    }
-    for (var item in healthdata) {
-      healthTotal += item.amount;
-    }
-    for (var item in personaldata) {
-      personalTotal += item.amount;
-    }
-    for (var item in transdata) {
-      transTotal += item.amount;
-    }
-    for (var item in utitilitiesdata) {
-      utilitiesTotal += item.amount;
-    }
-    dataList = [
-      Expense(category: "Clothing", amount: clothingTotal),
-      Expense(category: "Entertainment", amount: entertainmentTotal),
-      Expense(category: "Food", amount: foodTotal),
-      Expense(category: "Gifts/Donations", amount: giftsTotal),
-      Expense(category: "Medical/Healthcare", amount: healthTotal),
-      Expense(category: "Personal", amount: personalTotal),
-      Expense(category: "Transportation", amount: transTotal),
-      Expense(category: "Utilities", amount: utilitiesTotal),
-    ];
-  }
-
-  _charts() async {
-    await _chartFunction();
+  _charts() {
     series = [
       new charts.Series<Expense, String>(
           id: 'Sales',
-          domainFn: (Expense sales, _) => sales.category,
-          measureFn: (Expense sales, _) => sales.amount,
+          domainFn: (Expense exps, _) => exps.category,
+          measureFn: (Expense exps, _) => exps.amount,
           data: dataList,
           colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-          labelAccessorFn: (Expense sales, _) =>
-              '${sales.category} - \$${sales.amount.toString()}')
+          labelAccessorFn: (Expense exps, _) =>
+              '${exps.category} - \$${exps.amount.toString()}')
     ];
   }
 
@@ -169,7 +113,7 @@ class _HistoryState extends State<History> {
                 borderRadius: BorderRadius.circular(10.0)),
             title: Container(
               decoration: BoxDecoration(
-                  color: Colors.black87,
+                  color: Color(0xFF31373F),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10.0),
                       topRight: Radius.circular(10.0))),
@@ -304,7 +248,7 @@ class _HistoryState extends State<History> {
                           builder: (BuildContext context) => LandingPage()));
                 },
               ),
-              title: Text('History'),
+              title: Text('Expense'),
             ),
             body: SingleChildScrollView(
               child: Container(

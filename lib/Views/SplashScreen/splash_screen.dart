@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
         height: device.height,
         width: device.width,
         decoration: BoxDecoration(
-          color: Colors.redAccent,
+          color: Color(0xFF31373F),
         ),
         child: AnimatedOpacity(
           duration: Duration(milliseconds: 1000),

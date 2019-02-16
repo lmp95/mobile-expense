@@ -63,75 +63,75 @@ class _TodayExpenseState extends State<TodayExpense> {
         context: context,
         builder: (builder) {
           return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25.0),
-                    topRight: Radius.circular(25.0)),
-                color: Colors.white,
-              ),
-              child: FutureBuilder<List<Expense>>(
-                future: getExpense(),
-                builder: (context, snap) {
-                  if (snap.hasData && snap.data.length != 0) {
-                    return Column(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(left: 24.0),
-                          alignment: AlignmentDirectional.centerStart,
-                          height: 50.0,
-                          child: Text(
-                            _dateFormat.format(DateTime.now()),
-                            style: TextStyle(
-                                fontSize: 18.0, color: Colors.grey[900]),
-                          ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0)),
+              color: Colors.white,
+            ),
+            child: FutureBuilder<List<Expense>>(
+              future: getExpense(),
+              builder: (context, snap) {
+                if (snap.hasData && snap.data.length != 0) {
+                  return Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.only(left: 24.0),
+                        alignment: AlignmentDirectional.centerStart,
+                        height: 50.0,
+                        child: Text(
+                          _dateFormat.format(DateTime.now()),
+                          style: TextStyle(
+                              fontSize: 18.0, color: Colors.grey[900]),
                         ),
-                        Container(
-                            margin: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Divider(
-                              height: 1.5,
-                              color: Colors.black87,
-                            )),
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: snap.data.length,
-                            itemBuilder: (context, i) {
-                              return Container(
-                                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                                child: ListTile(
-                                  title: Text(snap.data[i].item),
-                                  subtitle: Text(snap.data[i].category),
-                                  trailing:
-                                      Text(snap.data[i].amount.toString()),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Container(
+                      ),
+                      Container(
                           margin: EdgeInsets.symmetric(horizontal: 16.0),
                           child: Divider(
                             height: 1.5,
                             color: Colors.black87,
-                          ),
+                          )),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: snap.data.length,
+                          itemBuilder: (context, i) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12.0),
+                              child: ListTile(
+                                title: Text(snap.data[i].item),
+                                subtitle: Text(snap.data[i].category),
+                                trailing: Text(snap.data[i].amount.toString()),
+                              ),
+                            );
+                          },
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: ListTile(
-                            title: Text("Total"),
-                            trailing: Text(finalAmt),
-                          ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Divider(
+                          height: 1.5,
+                          color: Colors.black87,
                         ),
-                      ],
-                    );
-                  } else {
-                    return Center(
-                        child: new Text(
-                      "No Expense List",
-                      style: TextStyle(fontSize: 18.0),
-                    ));
-                  }
-                },
-              ));
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: ListTile(
+                          title: Text("Total"),
+                          trailing: Text(finalAmt),
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Center(
+                      child: new Text(
+                    "No Expense List",
+                    style: TextStyle(fontSize: 18.0),
+                  ));
+                }
+              },
+            ),
+          );
         });
   }
 
@@ -147,7 +147,8 @@ class _TodayExpenseState extends State<TodayExpense> {
       width: device.width,
       margin: EdgeInsets.symmetric(horizontal: 12.0),
       child: Card(
-        color: Color(0xFF343434),
+        elevation: 7.2,
+        color: Color(0xFFF2F6F7),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: loading == true
@@ -168,7 +169,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                               ? 14.0
                               : 18.0,
                           fontWeight: FontWeight.w900,
-                          color: Colors.white),
+                          color: Color(0xFF31373F)),
                     ),
                   ),
                   Container(
@@ -196,7 +197,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                         child: Icon(
                           Icons.monetization_on,
                           size: 126.0,
-                          color: Colors.white30,
+                          color: Colors.black45,
                         ),
                       ),
                       Container(
@@ -230,7 +231,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                               child: Text(
                                 price,
                                 style: TextStyle(
-                                  color: Colors.white70,
+                                  color: Color(0xFF31373F),
                                   fontSize: device.height <= 600 &&
                                           orientation == Orientation.portrait
                                       ? 12.0
@@ -243,7 +244,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                               child: Text(
                                 item,
                                 style: TextStyle(
-                                  color: Colors.white70,
+                                  color: Color(0xFF31373F),
                                   fontSize: device.height <= 600 &&
                                           orientation == Orientation.portrait
                                       ? 14.0
@@ -252,7 +253,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                               ),
                             ),
                             Divider(
-                              color: Colors.white30,
+                              color: Colors.black87,
                               height: 25.0,
                             ),
                             Container(
@@ -275,7 +276,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                     margin: EdgeInsets.only(left: 16.0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(25.0),
-                                      color: Colors.white54,
+                                      color: Colors.black45,
                                     ),
                                     child: Text(
                                       finalAmt,
@@ -285,7 +286,8 @@ class _TodayExpenseState extends State<TodayExpense> {
                                                       Orientation.portrait
                                               ? 12.0
                                               : 16.0,
-                                          fontWeight: FontWeight.w500),
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white70),
                                     ),
                                   )
                                 ],

@@ -153,7 +153,7 @@ class _EditHistoryExpenseState extends State<EditHistoryExpense> {
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent)),
-                    labelText: "Item",
+                    labelText: "Description",
                     labelStyle: TextStyle(color: Colors.white70),
                     suffixIcon: Icon(
                       Icons.receipt,
