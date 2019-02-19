@@ -6,7 +6,6 @@ import '../../Models/Expense/expense.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import '../../Views/ExpenseHistory/add_history_expense.dart';
-import '../../Views/LandingPage/landing_page.dart';
 import '../../Views/ExpenseHistory/edit_history_expense.dart';
 import '../../Views/ExpenseHistory/daily_chart.dart';
 
@@ -26,50 +25,40 @@ class _HistoryState extends State<History> {
   DateFormat _dateFormat = DateFormat('dd MMM yyyy');
   DateFormat _queryDateFormat = DateFormat('yyyy-MM-dd');
   var db = DBProvider();
-  Expense _expense;
-  List<Expense> _listExp = [];
   var _loading = true;
   var priceTotal = 0.0;
   var series;
   var _chart = true;
   List<Expense> dataList = [];
+  Future<List<Expense>> fetchExpense(DateTime dt) async {
+    var queryDt = _queryDateFormat.format(dt);
+    var historyExpense = await db.historyExpense(queryDt);
+    setState(() {
+      _loading = false;
+    });
+    return historyExpense;
+  }
 
   @override
   void initState() {
     super.initState();
     selectedDate = _dateFormat.format(initialDate).toString();
     queryDate = _queryDateFormat.format(initialDate);
-    _getHistory(queryDate);
+    fetchExpense(initialDate);
+    _generateChart(queryDate);
   }
 
-  _getHistory(String date) {
-    _listExp.clear();
-    priceTotal = 0.0;
-    var getData = db.historyExpense(date);
-    getData.then((value) {
-      if (value.length != 0) {
-        for (var item in value) {
-          priceTotal += item.amount;
-          _expense = Expense(
-            id: item.id,
-            item: item.item,
-            category: item.category,
-            amount: item.amount,
-            date: item.date,
-            year: item.year,
-          );
-          _listExp.add(_expense);
-        }
-        dataList = dailyChartFunction(_listExp);
+  _generateChart(String dt) {
+    db.historyExpense(dt).then((data) {
+      if (data.length != 0) {
+        dataList = dailyChartFunction(data);
         _charts();
         setState(() {
           _chart = true;
-          _loading = false;
         });
       } else {
         setState(() {
           _chart = false;
-          _loading = false;
         });
       }
     });
@@ -80,12 +69,8 @@ class _HistoryState extends State<History> {
       _loading = true;
       selectedDate = _dateFormat.format(date);
       queryDate = _queryDateFormat.format(date);
-      var data = db.historyExpense(queryDate);
-      data.then((value) {
-        setState(() {
-          _getHistory(_queryDateFormat.format(date));
-        });
-      });
+      fetchExpense(date);
+      _generateChart(queryDate);
     });
   }
 
@@ -205,12 +190,7 @@ class _HistoryState extends State<History> {
                   ),
                   onPressed: () {
                     db.deleteExpense(deleteID);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => History(
-                                  initialDate: _dateFormat.parse(selectedDate),
-                                )));
+                    Navigator.pop(context);
                   },
                 ),
                 FlatButton(
@@ -231,113 +211,105 @@ class _HistoryState extends State<History> {
     var devHeight = MediaQuery.of(context).size.height - kToolbarHeight - 24;
     return OrientationBuilder(
       builder: (context, orientation) {
-        return WillPopScope(
-          onWillPop: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => LandingPage())),
-          child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LandingPage()));
-                },
-              ),
-              title: Text('Expense'),
-            ),
-            body: SingleChildScrollView(
-              child: Container(
-                height: orientation == Orientation.portrait
-                    ? devHeight
-                    : MediaQuery.of(context).size.longestSide / 1.4,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Theme(
-                      data: ThemeData(
-                        primarySwatch: Colors.red,
-                      ),
-                      child: Calendar(
-                        initialCalendarDateOverride: initialDate,
-                        onDateSelected: (value) {
-                          changedDate(value);
-                        },
-                      ),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Expense'),
+          ),
+          body: SingleChildScrollView(
+            child: Container(
+              height: orientation == Orientation.portrait
+                  ? devHeight
+                  : MediaQuery.of(context).size.longestSide / 1.4,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Theme(
+                    data: ThemeData(
+                      primarySwatch: Colors.red,
                     ),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      alignment: AlignmentDirectional.centerStart,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            selectedDate.toUpperCase(),
-                            style: TextStyle(
-                                fontSize: 18.0, color: Colors.black87),
-                          ),
-                          Container(
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  tooltip: "Add Expense",
-                                  highlightColor: Colors.transparent,
-                                  splashColor: Colors.transparent,
-                                  iconSize: 28.0,
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                AddHistoryExpense(
-                                                  selectedDate: selectedDate,
-                                                )));
-                                  },
-                                  icon: Icon(
-                                    Icons.add_circle_outline,
-                                    color: Colors.black54,
-                                  ),
+                    child: Calendar(
+                      initialCalendarDateOverride: initialDate,
+                      onDateSelected: (value) {
+                        changedDate(value);
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedDate.toUpperCase(),
+                          style:
+                              TextStyle(fontSize: 18.0, color: Colors.black87),
+                        ),
+                        Container(
+                          child: Row(
+                            children: [
+                              IconButton(
+                                tooltip: "Add Expense",
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                iconSize: 28.0,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              AddHistoryExpense(
+                                                selectedDate: selectedDate,
+                                              )));
+                                },
+                                icon: Icon(
+                                  Icons.add_circle_outline,
+                                  color: Colors.black54,
                                 ),
-                                IconButton(
-                                  tooltip: "View Chart",
-                                  highlightColor: Colors.transparent,
-                                  splashColor: Colors.transparent,
-                                  iconSize: 28.0,
-                                  onPressed: () {
-                                    _showChart(selectedDate, orientation);
-                                  },
-                                  icon: Icon(
-                                    Icons.show_chart,
-                                    color: Colors.black54,
-                                  ),
+                              ),
+                              IconButton(
+                                tooltip: "View Chart",
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                iconSize: 28.0,
+                                onPressed: () {
+                                  // _generateChart();
+                                  _showChart(selectedDate, orientation);
+                                },
+                                icon: Icon(
+                                  Icons.show_chart,
+                                  color: Colors.black54,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Divider(
-                        color: Colors.black,
-                        height: 1.5,
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Divider(
+                      color: Colors.black,
+                      height: 1.5,
                     ),
-                    Expanded(
-                      child: Container(
-                        child: _loading == true
-                            ? Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : _listExp.length != 0
-                                ? ListView.builder(
-                                    itemCount: _listExp.length,
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: _loading == true
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : FutureBuilder<List<Expense>>(
+                              future:
+                                  fetchExpense(_dateFormat.parse(selectedDate)),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData &&
+                                    snapshot.data.length != 0) {
+                                  var dataList = snapshot.data;
+                                  return ListView.builder(
+                                    itemCount: dataList.length,
                                     itemBuilder: (context, i) {
                                       return Slidable(
                                         controller: slidableController,
@@ -347,20 +319,20 @@ class _HistoryState extends State<History> {
                                         child: Container(
                                           child: ListTile(
                                             title: Text(
-                                              _listExp[i].item,
+                                              dataList[i].item,
                                               style: TextStyle(
                                                   color: Colors.black87,
                                                   fontSize: 18.0),
                                             ),
                                             subtitle: Text(
-                                              _listExp[i].category,
+                                              dataList[i].category,
                                               style: TextStyle(
                                                 color: Colors.black38,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             trailing: Text(
-                                              _listExp[i].amount.toString(),
+                                              dataList[i].amount.toString(),
                                               style: TextStyle(
                                                   color: Colors.redAccent,
                                                   fontSize: 17.0),
@@ -379,7 +351,7 @@ class _HistoryState extends State<History> {
                                                             selectedDate:
                                                                 selectedDate,
                                                             expense:
-                                                                _listExp[i],
+                                                                dataList[i],
                                                           )));
                                             },
                                             child: Container(
@@ -398,7 +370,7 @@ class _HistoryState extends State<History> {
                                           ),
                                           SlideAction(
                                             onTap: () {
-                                              _deleteDialog(_listExp[i].id);
+                                              _deleteDialog(dataList[i].id);
                                             },
                                             child: Container(
                                               padding: EdgeInsets.all(8.0),
@@ -417,8 +389,9 @@ class _HistoryState extends State<History> {
                                         ],
                                       );
                                     },
-                                  )
-                                : Center(
+                                  );
+                                } else {
+                                  return Center(
                                     child: Text(
                                       "No History",
                                       style: TextStyle(
@@ -426,25 +399,51 @@ class _HistoryState extends State<History> {
                                         fontSize: 18.0,
                                       ),
                                     ),
-                                  ),
-                      ),
+                                  );
+                                }
+                              },
+                            ),
                     ),
-                    Container(
-                        color: Colors.redAccent,
-                        child: ListTile(
-                          title: Text(
-                            "Total",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 17.0),
-                          ),
-                          trailing: Text(
-                            priceTotal.toString(),
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 17.0),
-                          ),
-                        )),
-                  ],
-                ),
+                  ),
+                  Container(
+                      color: Colors.redAccent,
+                      child: FutureBuilder(
+                        future: fetchExpense(_dateFormat.parse(selectedDate)),
+                        builder: (buildcontext, snapshot) {
+                          if (snapshot.hasData && snapshot.data.length != 0) {
+                            var totalPrice = 0.0;
+                            for (var item in snapshot.data) {
+                              totalPrice += item.amount;
+                            }
+                            return ListTile(
+                              title: Text(
+                                "Total",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17.0),
+                              ),
+                              trailing: Text(
+                                totalPrice.toString(),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17.0),
+                              ),
+                            );
+                          } else {
+                            return ListTile(
+                              title: Text(
+                                "Total",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17.0),
+                              ),
+                              trailing: Text(
+                                "0.0",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17.0),
+                              ),
+                            );
+                          }
+                        },
+                      )),
+                ],
               ),
             ),
           ),

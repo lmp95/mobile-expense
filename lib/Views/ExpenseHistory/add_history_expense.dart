@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
-import '../../Views/ExpenseHistory/history.dart';
 import 'package:intl/intl.dart';
 
 class AddHistoryExpense extends StatefulWidget {
@@ -72,11 +71,7 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
           0, _dateFormat.parse(selectedDate).toString().indexOf(' '));
       expense.year = _dateFormat.parse(selectedDate).year.toString();
       db.addExpense(expense);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  History(initialDate: _dateFormat.parse(selectedDate))));
+      Navigator.pop(context);
     }
   }
 
