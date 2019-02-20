@@ -69,6 +69,7 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
       expense.category = choiceCate;
       expense.date = _dateFormat.parse(selectedDate).toString().substring(
           0, _dateFormat.parse(selectedDate).toString().indexOf(' '));
+      expense.month = DateTime.now().month.toString();
       expense.year = _dateFormat.parse(selectedDate).year.toString();
       db.addExpense(expense);
       Navigator.pop(context);
@@ -78,8 +79,9 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF343434),
+      backgroundColor: Color(0xFF31373F),
       appBar: AppBar(
+        elevation: 0.0,
         title: Text(
           "Add Expense",
           style: TextStyle(color: Colors.white70),
@@ -110,6 +112,8 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
                   validator: (data) =>
                       amount.text.length == 0 ? 'Please enter amount' : null,
                   decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white70)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent)),
                     labelText: "Amount",
@@ -133,11 +137,13 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
                 child: TextFormField(
                   controller: item,
                   validator: (data) =>
-                      item.text.length == 0 ? 'Please enter item name' : null,
+                      item.text.length == 0 ? 'Please enter description' : null,
                   keyboardType: TextInputType.text,
                   style: TextStyle(color: Colors.white70),
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white70)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent)),
                     labelText: "Description",
@@ -158,6 +164,8 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
               ),
               InputDecorator(
                 decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white70)),
                   errorText: error == true ? 'Please choose Category' : null,
                   contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
                   border: OutlineInputBorder(
@@ -165,7 +173,7 @@ class _AddHistoryExpenseState extends State<AddHistoryExpense> {
                 ),
                 child: Theme(
                   data: Theme.of(context).copyWith(
-                      canvasColor: Colors.grey[800],
+                      canvasColor: Color(0xFF31373F),
                       brightness: Brightness.dark),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(

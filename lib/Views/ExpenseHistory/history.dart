@@ -28,7 +28,6 @@ class _HistoryState extends State<History> {
   var _loading = true;
   var priceTotal = 0.0;
   var series;
-  var _chart = true;
   List<Expense> dataList = [];
   Future<List<Expense>> fetchExpense(DateTime dt) async {
     var queryDt = _queryDateFormat.format(dt);
@@ -45,23 +44,6 @@ class _HistoryState extends State<History> {
     selectedDate = _dateFormat.format(initialDate).toString();
     queryDate = _queryDateFormat.format(initialDate);
     fetchExpense(initialDate);
-    _generateChart(queryDate);
-  }
-
-  _generateChart(String dt) {
-    db.historyExpense(dt).then((data) {
-      if (data.length != 0) {
-        dataList = dailyChartFunction(data);
-        _charts();
-        setState(() {
-          _chart = true;
-        });
-      } else {
-        setState(() {
-          _chart = false;
-        });
-      }
-    });
   }
 
   changedDate(DateTime date) {
@@ -70,7 +52,6 @@ class _HistoryState extends State<History> {
       selectedDate = _dateFormat.format(date);
       queryDate = _queryDateFormat.format(date);
       fetchExpense(date);
-      _generateChart(queryDate);
     });
   }
 
@@ -108,8 +89,14 @@ class _HistoryState extends State<History> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            content: _chart == true
-                ? SingleChildScrollView(
+            content: FutureBuilder(
+              future: fetchExpense(_dateFormat.parse(selectedDate)),
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data.length != 0) {
+                  var results = snapshot.data;
+                  dataList = dailyChartFunction(results);
+                  _charts();
+                  return SingleChildScrollView(
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
@@ -120,16 +107,15 @@ class _HistoryState extends State<History> {
                                 ? MediaQuery.of(context).size.height / 2
                                 : MediaQuery.of(context).size.longestSide / 3,
                             child: Container(
-                              padding: EdgeInsets.all(16.0),
-                              child: charts.BarChart(
-                                series,
-                                vertical: false,
-                                barRendererDecorator:
-                                    new charts.BarLabelDecorator<String>(),
-                                domainAxis: new charts.OrdinalAxisSpec(
-                                    renderSpec: new charts.NoneRenderSpec()),
-                              ),
-                            ),
+                                padding: EdgeInsets.all(16.0),
+                                child: charts.BarChart(
+                                  series,
+                                  vertical: false,
+                                  barRendererDecorator:
+                                      new charts.BarLabelDecorator<String>(),
+                                  domainAxis: new charts.OrdinalAxisSpec(
+                                      renderSpec: new charts.NoneRenderSpec()),
+                                )),
                           ),
                           Divider(
                             color: Colors.black54,
@@ -138,8 +124,9 @@ class _HistoryState extends State<History> {
                         ],
                       ),
                     ),
-                  )
-                : Column(
+                  );
+                } else {
+                  return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Container(
@@ -155,7 +142,10 @@ class _HistoryState extends State<History> {
                         height: 1.5,
                       ),
                     ],
-                  ),
+                  );
+                }
+              },
+            ),
             actions: <Widget>[
               FlatButton(
                 highlightColor: Colors.transparent,

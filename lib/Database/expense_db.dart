@@ -32,6 +32,7 @@ class DBProvider {
       price REAL NOT NULL,
       category TEXT NOT NULL,
       date TEXT NOT NULL,
+      month TEXT NOT NULL,
       year TEXT NOT NULL)""");
 
     await db.execute("""CREATE TABLE income(
@@ -63,6 +64,7 @@ class DBProvider {
           amount: list[i]['price'],
           category: list[i]['category'],
           date: list[i]['date'],
+          month: list[i]['month'],
           year: list[i]['year']));
     }
     return expenseList;
@@ -80,6 +82,7 @@ class DBProvider {
           amount: list[i]['price'],
           category: list[i]['category'],
           date: list[i]['date'],
+          month: list[i]['month'],
           year: list[i]['year']));
     }
     return expenseList;
@@ -98,6 +101,7 @@ class DBProvider {
           amount: specificDateList[i]['price'],
           category: specificDateList[i]['category'],
           date: specificDateList[i]['date'],
+          month: specificDateList[i]['month'],
           year: specificDateList[i]['year']));
     }
     return expenseList;
@@ -115,7 +119,26 @@ class DBProvider {
           amount: list[i]['price'],
           category: list[i]['category'],
           date: list[i]['date'],
+          month: list[i]['month'],
           year: list[i]['year']));
+    }
+    return expenseList;
+  }
+
+  Future<List<Expense>> getMonthlyExpense(String thisMonth) async {
+    var dbClient = await _db;
+    List<Map> specificDateList = await dbClient.rawQuery(
+        "SELECT * FROM expense WHERE month = '$thisMonth' ORDER BY date");
+    List<Expense> expenseList = List();
+    for (var i = 0; i < specificDateList.length; i++) {
+      expenseList.add(Expense(
+          id: specificDateList[i]['id'],
+          item: specificDateList[i]['item'],
+          amount: specificDateList[i]['price'],
+          category: specificDateList[i]['category'],
+          date: specificDateList[i]['date'],
+          month: specificDateList[i]['month'],
+          year: specificDateList[i]['year']));
     }
     return expenseList;
   }
@@ -133,6 +156,14 @@ class DBProvider {
     await dbClient.transaction((txn) async {
       return await txn
           .delete("expense", where: "id = ?", whereArgs: [expenseID]);
+    });
+  }
+
+  // Income Methods --------------------------------------------------------------------------------
+  Future<void> addIncome(Income income) async {
+    var dbClient = await _db;
+    await dbClient.transaction((txn) async {
+      return await txn.insert("income", income.toMap());
     });
   }
 

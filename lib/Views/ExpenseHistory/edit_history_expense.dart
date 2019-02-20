@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
-import '../../Views/ExpenseHistory/history.dart';
 import 'package:intl/intl.dart';
 
 class EditHistoryExpense extends StatefulWidget {
@@ -78,21 +77,19 @@ class _EditHistoryExpenseState extends State<EditHistoryExpense> {
       exp.category = choiceCate;
       exp.date = _dateFormat.parse(selectedDate).toString().substring(
           0, _dateFormat.parse(selectedDate).toString().indexOf(' '));
+      exp.month = _dateFormat.parse(selectedDate).month.toString();
       exp.year = _dateFormat.parse(selectedDate).year.toString();
       db.updateExpense(exp);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  History(initialDate: _dateFormat.parse(selectedDate))));
+      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF343434),
+      backgroundColor: Color(0xFF31373F),
       appBar: AppBar(
+        elevation: 0.0,
         title: Text(
           "Add Expense",
           style: TextStyle(color: Colors.white70),
@@ -123,6 +120,8 @@ class _EditHistoryExpenseState extends State<EditHistoryExpense> {
                   validator: (data) =>
                       amount.text.length == 0 ? 'Please enter amount' : null,
                   decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white70)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent)),
                     labelText: "Amount",
@@ -146,11 +145,13 @@ class _EditHistoryExpenseState extends State<EditHistoryExpense> {
                 child: TextFormField(
                   controller: item,
                   validator: (data) =>
-                      item.text.length == 0 ? 'Please enter item name' : null,
+                      item.text.length == 0 ? 'Please enter description' : null,
                   keyboardType: TextInputType.text,
                   style: TextStyle(color: Colors.white70),
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white70)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent)),
                     labelText: "Description",
@@ -171,6 +172,8 @@ class _EditHistoryExpenseState extends State<EditHistoryExpense> {
               ),
               InputDecorator(
                 decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white70)),
                   errorText: error == true ? 'Please choose Category' : null,
                   contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
                   border: OutlineInputBorder(
@@ -178,7 +181,7 @@ class _EditHistoryExpenseState extends State<EditHistoryExpense> {
                 ),
                 child: Theme(
                   data: Theme.of(context).copyWith(
-                      canvasColor: Colors.grey[800],
+                      canvasColor: Color(0xFF31373F),
                       brightness: Brightness.dark),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(

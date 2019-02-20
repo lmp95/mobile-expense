@@ -20,9 +20,9 @@ class _TodayExpenseState extends State<TodayExpense> {
   _TodayExpenseState({this.orientation, this.actualHeight});
 
   final SlidableController slidableController = new SlidableController();
-  var price;
-  var item;
-  var finalAmt;
+  var price = 'No expense';
+  var item = 'No item';
+  double finalAmt = 0.0;
   var loading = true;
   DateFormat _dateFormat = DateFormat('d MMM yyyy');
 
@@ -35,27 +35,18 @@ class _TodayExpenseState extends State<TodayExpense> {
   @override
   void initState() {
     super.initState();
-    getExpense().then((value) {
-      if (value.length == 0) {
-        setState(() {
-          price = 'No expense';
-          item = 'No item';
-          finalAmt = '0';
-          loading = false;
-        });
-      } else {
-        var total = 0.0;
-        for (var item in value) {
-          total += item.amount;
-        }
-        setState(() {
-          finalAmt = total.toString();
-          item = value[0].item;
-          price = value[0].amount.toString();
-          loading = false;
-        });
-      }
+    getExpense().then((data) {
+      setState(() {
+        loading = false;
+      });
     });
+  }
+
+  _getTotal(List<Expense> expList) {
+    finalAmt = 0.0;
+    for (var expAmt in expList) {
+      finalAmt += expAmt.amount;
+    }
   }
 
   void _showModalSheet() {
@@ -117,7 +108,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                         margin: EdgeInsets.symmetric(horizontal: 16.0),
                         child: ListTile(
                           title: Text("Total"),
-                          trailing: Text(finalAmt),
+                          trailing: Text(finalAmt.toString()),
                         ),
                       ),
                     ],
@@ -228,28 +219,72 @@ class _TodayExpenseState extends State<TodayExpense> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                price,
-                                style: TextStyle(
-                                  color: Color(0xFF31373F),
-                                  fontSize: device.height <= 600 &&
-                                          orientation == Orientation.portrait
-                                      ? 12.0
-                                      : 16.0,
-                                ),
+                              child: FutureBuilder(
+                                future: getExpense(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data.length != 0) {
+                                    price = snapshot.data[0].amount.toString();
+                                    return Text(
+                                      price,
+                                      style: TextStyle(
+                                        color: Color(0xFF31373F),
+                                        fontSize: device.height <= 600 &&
+                                                orientation ==
+                                                    Orientation.portrait
+                                            ? 12.0
+                                            : 16.0,
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      price,
+                                      style: TextStyle(
+                                        color: Color(0xFF31373F),
+                                        fontSize: device.height <= 600 &&
+                                                orientation ==
+                                                    Orientation.portrait
+                                            ? 12.0
+                                            : 16.0,
+                                      ),
+                                    );
+                                  }
+                                },
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                item,
-                                style: TextStyle(
-                                  color: Color(0xFF31373F),
-                                  fontSize: device.height <= 600 &&
-                                          orientation == Orientation.portrait
-                                      ? 14.0
-                                      : 16.0,
-                                ),
+                              child: FutureBuilder(
+                                future: getExpense(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data.length != 0) {
+                                    item = snapshot.data[0].item;
+                                    return Text(
+                                      item,
+                                      style: TextStyle(
+                                        color: Color(0xFF31373F),
+                                        fontSize: device.height <= 600 &&
+                                                orientation ==
+                                                    Orientation.portrait
+                                            ? 14.0
+                                            : 16.0,
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      item,
+                                      style: TextStyle(
+                                        color: Color(0xFF31373F),
+                                        fontSize: device.height <= 600 &&
+                                                orientation ==
+                                                    Orientation.portrait
+                                            ? 14.0
+                                            : 16.0,
+                                      ),
+                                    );
+                                  }
+                                },
                               ),
                             ),
                             Divider(
@@ -257,8 +292,11 @@ class _TodayExpenseState extends State<TodayExpense> {
                               height: 25.0,
                             ),
                             Container(
-                              padding: const EdgeInsets.only(top: 8.0),
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, right: 12.0),
                               child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
                                     "Total Expense".toUpperCase(),
@@ -268,7 +306,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                                 orientation ==
                                                     Orientation.portrait
                                             ? 16.0
-                                            : 20.0),
+                                            : 16.0),
                                   ),
                                   Container(
                                     padding: EdgeInsets.symmetric(
@@ -278,16 +316,40 @@ class _TodayExpenseState extends State<TodayExpense> {
                                       borderRadius: BorderRadius.circular(25.0),
                                       color: Colors.black45,
                                     ),
-                                    child: Text(
-                                      finalAmt,
-                                      style: TextStyle(
-                                          fontSize: device.height <= 600 &&
-                                                  orientation ==
-                                                      Orientation.portrait
-                                              ? 12.0
-                                              : 16.0,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white70),
+                                    child: FutureBuilder(
+                                      future: getExpense(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData &&
+                                            snapshot.data.length != 0) {
+                                          var data = snapshot.data;
+                                          _getTotal(data);
+                                          return Text(
+                                            finalAmt.toString(),
+                                            style: TextStyle(
+                                                fontSize: device.height <=
+                                                            600 &&
+                                                        orientation ==
+                                                            Orientation.portrait
+                                                    ? 12.0
+                                                    : 14.0,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.white70),
+                                          );
+                                        } else {
+                                          return Text(
+                                            finalAmt.toString(),
+                                            style: TextStyle(
+                                                fontSize: device.height <=
+                                                            600 &&
+                                                        orientation ==
+                                                            Orientation.portrait
+                                                    ? 12.0
+                                                    : 16.0,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.white70),
+                                          );
+                                        }
+                                      },
                                     ),
                                   )
                                 ],

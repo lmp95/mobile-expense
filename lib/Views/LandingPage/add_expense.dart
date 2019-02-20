@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
-import '../../Views/LandingPage/landing_page.dart';
+import 'package:intl/intl.dart';
 
 class AddExpense extends StatefulWidget {
   final orientation;
@@ -15,6 +15,7 @@ class _AddExpenseState extends State<AddExpense> {
   final _expAddFormKey = GlobalKey<FormState>();
   TextEditingController amount = TextEditingController();
   TextEditingController item = TextEditingController();
+  DateFormat _dateFormat = DateFormat('dd MMM yyyy');
   String choiceCate;
   var error = false;
   List<String> _cateList = [
@@ -64,21 +65,22 @@ class _AddExpenseState extends State<AddExpense> {
       expense.item = item.text;
       expense.amount = double.parse(amount.text);
       expense.category = choiceCate;
+      expense.month = DateTime.now().month.toString();
       expense.date = DateTime.now()
           .toString()
           .substring(0, DateTime.now().toString().indexOf(' '));
       expense.year = DateTime.now().year.toString();
       db.addExpense(expense);
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => LandingPage()));
+      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF343434),
+      backgroundColor: Color(0xFF31373F),
       appBar: AppBar(
+        elevation: 0.0,
         title: Text(
           "Add Expense",
           style: TextStyle(color: Colors.white70),
@@ -92,6 +94,14 @@ class _AddExpenseState extends State<AddExpense> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Text(
+                  _dateFormat.format(DateTime.now()),
+                  style: TextStyle(color: Colors.white, fontSize: 18.0),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
                 child: TextFormField(
@@ -101,6 +111,8 @@ class _AddExpenseState extends State<AddExpense> {
                   validator: (data) =>
                       amount.text.length == 0 ? 'Please enter amount' : null,
                   decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white70)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent)),
                     labelText: "Amount",
@@ -124,11 +136,13 @@ class _AddExpenseState extends State<AddExpense> {
                 child: TextFormField(
                   controller: item,
                   validator: (data) =>
-                      item.text.length == 0 ? 'Please enter item name' : null,
+                      item.text.length == 0 ? 'Please enter description' : null,
                   keyboardType: TextInputType.text,
                   style: TextStyle(color: Colors.white70),
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white70)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.redAccent)),
                     labelText: "Description",
@@ -149,6 +163,8 @@ class _AddExpenseState extends State<AddExpense> {
               ),
               InputDecorator(
                 decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white70)),
                   errorText: error == true ? 'Please choose Category' : null,
                   contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
                   border: OutlineInputBorder(
@@ -156,7 +172,7 @@ class _AddExpenseState extends State<AddExpense> {
                 ),
                 child: Theme(
                   data: Theme.of(context).copyWith(
-                      canvasColor: Colors.grey[800],
+                      canvasColor: Color(0xFF31373F),
                       brightness: Brightness.dark),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(

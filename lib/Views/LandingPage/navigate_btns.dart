@@ -26,7 +26,9 @@ class _NavigateBtnState extends State<NavigateBtn> {
     return Container(
       margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
       padding: EdgeInsets.symmetric(horizontal: 8.0),
-      height: actualHeight / 5,
+      height: orientation == Orientation.portrait
+          ? actualHeight / 5
+          : actualHeight / 2.5,
       child: Row(
         children: <Widget>[
           Container(
@@ -72,7 +74,9 @@ class _NavigateBtnState extends State<NavigateBtn> {
                 Container(
                   margin: EdgeInsets.only(bottom: 4.0),
                   width: (device.width / 2) - 16.0,
-                  height: ((actualHeight / 5) / 2) - 4,
+                  height: orientation == Orientation.portrait
+                      ? ((actualHeight / 5) / 2) - 4
+                      : ((actualHeight / 2.5) / 2 - 4),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Color(0xFF38C8DD)),
@@ -115,7 +119,9 @@ class _NavigateBtnState extends State<NavigateBtn> {
                 Container(
                   margin: EdgeInsets.only(top: 4.0),
                   width: (device.width / 2) - 16.0,
-                  height: ((actualHeight / 5) / 2) - 4,
+                  height: orientation == Orientation.portrait
+                      ? ((actualHeight / 5) / 2) - 4
+                      : ((actualHeight / 2.5) / 2 - 4),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Color(0xFF7D60BE)),
