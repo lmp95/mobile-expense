@@ -38,36 +38,28 @@ class _LandingPageState extends State<LandingPage> {
     var actualHeight = device.height - 24 - kToolbarHeight;
     return OrientationBuilder(
       builder: (context, orientation) {
-        return Theme(
-          data: ThemeData(
-            fontFamily: 'Play',
-            primaryColor: Color(0xFF31373F),
-            primarySwatch: Colors.red,
-            canvasColor: Colors.transparent,
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 0.0,
+            title: Text("Dashboard"),
           ),
-          child: Scaffold(
-            appBar: AppBar(
-              elevation: 0.0,
-              title: Text("Dashboard"),
-            ),
-            backgroundColor: Color(0xFF31373F),
-            body: SingleChildScrollView(
-              child: Container(
-                color: Color(0xFF31373F),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TodayExpense(
-                      orientation: orientation,
-                      actualHeight: actualHeight,
-                    ),
-                    NavigateBtn(
-                      orientation: orientation,
-                      actualHeight: actualHeight,
-                    ),
-                    ThisMonthExpense(),
-                  ],
-                ),
+          backgroundColor: Color(0xFF31373F),
+          body: SingleChildScrollView(
+            child: Container(
+              color: Color(0xFF31373F),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TodayExpense(
+                    orientation: orientation,
+                    actualHeight: actualHeight,
+                  ),
+                  NavigateBtn(
+                    orientation: orientation,
+                    actualHeight: actualHeight,
+                  ),
+                  ThisMonthExpense(),
+                ],
               ),
             ),
           ),

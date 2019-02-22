@@ -213,16 +213,11 @@ class _HistoryState extends State<History> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Theme(
-                    data: ThemeData(
-                      primarySwatch: Colors.red,
-                    ),
-                    child: Calendar(
-                      initialCalendarDateOverride: initialDate,
-                      onDateSelected: (value) {
-                        changedDate(value);
-                      },
-                    ),
+                  Calendar(
+                    initialCalendarDateOverride: initialDate,
+                    onDateSelected: (value) {
+                      changedDate(value);
+                    },
                   ),
                   Container(
                     padding:
@@ -264,7 +259,6 @@ class _HistoryState extends State<History> {
                                 splashColor: Colors.transparent,
                                 iconSize: 28.0,
                                 onPressed: () {
-                                  // _generateChart();
                                   _showChart(selectedDate, orientation);
                                 },
                                 icon: Icon(
@@ -325,7 +319,8 @@ class _HistoryState extends State<History> {
                                               dataList[i].amount.toString(),
                                               style: TextStyle(
                                                   color: Colors.redAccent,
-                                                  fontSize: 17.0),
+                                                  fontSize: 17.0,
+                                                  fontWeight: FontWeight.w600),
                                             ),
                                           ),
                                         ),
@@ -396,7 +391,7 @@ class _HistoryState extends State<History> {
                     ),
                   ),
                   Container(
-                      color: Colors.redAccent,
+                      color: Color(0xFF31373F),
                       child: FutureBuilder(
                         future: fetchExpense(_dateFormat.parse(selectedDate)),
                         builder: (buildcontext, snapshot) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import '../../Views/LandingPage/add_income.dart';
+import '../../Views/Income/add_income.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
 import '../../Models/Income/income.dart';
@@ -32,7 +32,7 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
     List<Expense> expList = [];
     List<Income> incomeList = [];
     await db.getMonthlyExpense(thisMonth).then((data) => expList = data);
-    await db.getMonthlyIncome().then((data) => incomeList = data);
+    await db.getMonthlyIncome(thisMonth).then((data) => incomeList = data);
     for (var exp in expList) {
       totalExp += exp.amount;
     }
@@ -73,7 +73,9 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) => AddIncome()));
+                            builder: (BuildContext context) => AddIncome(
+                                  dt: DateTime.now(),
+                                )));
                   },
                   child: Row(
                     children: <Widget>[
@@ -173,7 +175,8 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                             ),
                           ),
                           FutureBuilder(
-                            future: db.getMonthlyIncome(),
+                            future: db.getMonthlyIncome(
+                                DateTime.now().month.toString()),
                             builder: (context, snapshot) {
                               if (snapshot.hasData &&
                                   snapshot.data.length != 0) {

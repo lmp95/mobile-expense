@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../Views/ExpenseHistory/history.dart';
+import '../../Views/Income/income.dart';
 
 class NavigateBtn extends StatefulWidget {
   final orientation;
@@ -38,6 +39,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                 borderRadius: BorderRadius.circular(10.0),
                 color: Colors.redAccent),
             child: FlatButton(
+              highlightColor: Colors.transparent,
               onPressed: () {},
               padding: EdgeInsets.all(0.0),
               child: Column(
@@ -81,6 +83,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                       borderRadius: BorderRadius.circular(10.0),
                       color: Color(0xFF38C8DD)),
                   child: FlatButton(
+                    highlightColor: Colors.transparent,
                     onPressed: () {
                       Navigator.push(
                           context,
@@ -107,7 +110,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                         Container(
                           padding: EdgeInsets.only(right: 12.0),
                           child: Text(
-                            "Expense",
+                            "Daily Expense",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 18.0),
                           ),
@@ -126,7 +129,13 @@ class _NavigateBtnState extends State<NavigateBtn> {
                       borderRadius: BorderRadius.circular(10.0),
                       color: Color(0xFF7D60BE)),
                   child: FlatButton(
-                    onPressed: () {},
+                    highlightColor: Colors.transparent,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => Income()));
+                    },
                     padding: EdgeInsets.all(0.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,7 +154,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                         Container(
                           padding: EdgeInsets.only(right: 12.0),
                           child: Text(
-                            "Income",
+                            "Monthly Income",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 16.0),
                           ),

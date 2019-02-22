@@ -167,8 +167,7 @@ class DBProvider {
     });
   }
 
-  Future<List<Income>> getMonthlyIncome() async {
-    var thisMonth = DateTime.now().month;
+  Future<List<Income>> getMonthlyIncome(String thisMonth) async {
     var dbClient = await _db;
     List<Map> list = await dbClient.rawQuery(
         "SELECT * FROM income WHERE month = '$thisMonth' ORDER BY id DESC");
@@ -183,5 +182,20 @@ class DBProvider {
           year: list[i]['year']));
     }
     return monthlyIncomeList;
+  }
+
+  void updateIncome(Income income) async {
+    var dbClient = await _db;
+    await dbClient.transaction((txn) async {
+      await txn.update("income", income.toMap(),
+          where: "id = ?", whereArgs: [income.id]);
+    });
+  }
+
+  void deleteIncome(int incomeID) async {
+    var dbClient = await _db;
+    await dbClient.transaction((txn) async {
+      return await txn.delete("income", where: "id = ?", whereArgs: [incomeID]);
+    });
   }
 }

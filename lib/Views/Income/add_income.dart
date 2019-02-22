@@ -4,11 +4,18 @@ import '../../Models/Income/income.dart';
 import 'package:intl/intl.dart';
 
 class AddIncome extends StatefulWidget {
+  final DateTime dt;
+  final Income editIncome;
+  AddIncome({this.dt, this.editIncome});
   @override
-  _AddIncomeState createState() => _AddIncomeState();
+  _AddIncomeState createState() =>
+      _AddIncomeState(dt: dt, editIncome: editIncome);
 }
 
 class _AddIncomeState extends State<AddIncome> {
+  final DateTime dt;
+  final Income editIncome;
+  _AddIncomeState({this.dt, this.editIncome});
   TextEditingController incomeAmt = TextEditingController();
   TextEditingController incomeDesc = TextEditingController();
   final _incomeFormKey = GlobalKey<FormState>();
@@ -17,20 +24,48 @@ class _AddIncomeState extends State<AddIncome> {
   DateFormat dtFormat = DateFormat("yyyy-MM-dd");
   DateFormat _dateFormat = DateFormat("dd MMM yyyy");
 
+  initState() {
+    super.initState();
+    if (editIncome != null) {
+      setState(() {
+        incomeAmt.text = editIncome.amount.toString();
+        incomeDesc.text = editIncome.description;
+      });
+    }
+  }
+
   _saveIncome() {
-    if (_incomeFormKey.currentState.validate() == true) {
-      _incomeFormKey.currentState.save();
-      income = Income(
-        description: incomeDesc.text,
-        amount: double.parse(incomeAmt.text),
-        date: dtFormat.format(DateTime.now()),
-        month: DateTime.now().month.toString(),
-        year: DateTime.now().year.toString(),
-      );
-      db.addIncome(income);
-      incomeAmt.clear();
-      incomeDesc.clear();
-      Navigator.pop(context, true);
+    if (editIncome == null) {
+      if (_incomeFormKey.currentState.validate() == true) {
+        _incomeFormKey.currentState.save();
+        income = Income(
+          description: incomeDesc.text,
+          amount: double.parse(incomeAmt.text),
+          date: dtFormat.format(dt),
+          month: dt.month.toString(),
+          year: dt.year.toString(),
+        );
+        db.addIncome(income);
+        incomeAmt.clear();
+        incomeDesc.clear();
+        Navigator.pop(context, true);
+      }
+    } else {
+      if (_incomeFormKey.currentState.validate() == true) {
+        _incomeFormKey.currentState.save();
+        income = Income(
+          id: editIncome.id,
+          description: incomeDesc.text,
+          amount: double.parse(incomeAmt.text),
+          date: dtFormat.format(dt),
+          month: dt.month.toString(),
+          year: dt.year.toString(),
+        );
+        db.updateIncome(income);
+        incomeAmt.clear();
+        incomeDesc.clear();
+        Navigator.pop(context, true);
+      }
     }
   }
 
@@ -56,7 +91,7 @@ class _AddIncomeState extends State<AddIncome> {
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: Text(
-                      _dateFormat.format(DateTime.now()),
+                      _dateFormat.format(dt),
                       style: TextStyle(color: Colors.white, fontSize: 18.0),
                     ),
                   ),
