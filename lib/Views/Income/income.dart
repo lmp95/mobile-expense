@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../Views/Income/add_income.dart';
+import '../../Views/Income/income_form.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Income/income.dart' as IncomeModel;
@@ -73,34 +73,37 @@ class _IncomeState extends State<Income> {
 
   _deleteIncome(int deleteID) {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text("Delete Income"),
-              content: Text("Are you sure to delete?"),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text("Delete Income"),
+            content: Text("Are you sure to delete?"),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                padding: EdgeInsets.all(0.0),
+                child: Text(
+                  "Yes".toUpperCase(),
+                ),
+                onPressed: () {
+                  db.deleteIncome(deleteID);
+                  Navigator.pop(context);
+                },
               ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    "Yes".toUpperCase(),
-                  ),
-                  onPressed: () {
-                    db.deleteIncome(deleteID);
-                    Navigator.pop(context);
-                  },
+              FlatButton(
+                padding: EdgeInsets.all(0.0),
+                child: Text(
+                  "No".toUpperCase(),
+                  style: TextStyle(color: Colors.grey[800]),
                 ),
-                FlatButton(
-                  child: Text(
-                    "No".toUpperCase(),
-                    style: TextStyle(color: Colors.grey[800]),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ));
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+    );
   }
 
   @override
@@ -118,12 +121,9 @@ class _IncomeState extends State<Income> {
           body: Column(
             children: [
               Container(
-                margin: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(0, 0, 0, 0.05),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                width: dev.width - 16.0,
+                margin: EdgeInsets.all(0.0),
+                color: Color.fromRGBO(0, 0, 0, 0.05),
+                width: dev.width,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -139,7 +139,7 @@ class _IncomeState extends State<Income> {
                               _dtFormat.format(_currentDate).toUpperCase(),
                               style: TextStyle(
                                   color: Color(0xFF31373F),
-                                  fontSize: 24.0,
+                                  fontSize: dev.longestSide > 600 ? 24.0 : 20.0,
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -159,7 +159,7 @@ class _IncomeState extends State<Income> {
                               "Total Income".toUpperCase(),
                               style: TextStyle(
                                   color: Colors.red,
-                                  fontSize: 12.0,
+                                  fontSize: dev.longestSide > 600 ? 12.0 : 10.0,
                                   letterSpacing: 1.25,
                                   fontWeight: FontWeight.w900),
                             ),
@@ -186,7 +186,9 @@ class _IncomeState extends State<Income> {
                                             .replaceAllMapped(reg, mathFunc),
                                         style: TextStyle(
                                             color: Color(0xFF31373F),
-                                            fontSize: 20.0,
+                                            fontSize: dev.longestSide > 600
+                                                ? 20.0
+                                                : 18.0,
                                             fontWeight: FontWeight.w100),
                                       );
                                     } else {
@@ -228,7 +230,7 @@ class _IncomeState extends State<Income> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => AddIncome(
+                            builder: (BuildContext context) => IncomeForm(
                                   dt: _currentDate,
                                 ),
                           ),
@@ -300,7 +302,7 @@ class _IncomeState extends State<Income> {
                                               MaterialPageRoute(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          AddIncome(
+                                                          IncomeForm(
                                                             dt: DateTime.parse(
                                                                 snapshot.data[i]
                                                                     .date),

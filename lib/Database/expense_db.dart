@@ -170,7 +170,7 @@ class DBProvider {
   Future<List<Income>> getMonthlyIncome(String thisMonth) async {
     var dbClient = await _db;
     List<Map> list = await dbClient.rawQuery(
-        "SELECT * FROM income WHERE month = '$thisMonth' ORDER BY id DESC");
+        "SELECT * FROM income WHERE month = '$thisMonth' ORDER BY date DESC");
     List<Income> monthlyIncomeList = List();
     for (var i = 0; i < list.length; i++) {
       monthlyIncomeList.add(Income(

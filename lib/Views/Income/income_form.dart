@@ -3,29 +3,40 @@ import '../../Database/expense_db.dart';
 import '../../Models/Income/income.dart';
 import 'package:intl/intl.dart';
 
-class AddIncome extends StatefulWidget {
+class IncomeForm extends StatefulWidget {
   final DateTime dt;
   final Income editIncome;
-  AddIncome({this.dt, this.editIncome});
+  IncomeForm({this.dt, this.editIncome});
   @override
-  _AddIncomeState createState() =>
-      _AddIncomeState(dt: dt, editIncome: editIncome);
+  _IncomeFormState createState() =>
+      _IncomeFormState(dt: dt, editIncome: editIncome);
 }
 
-class _AddIncomeState extends State<AddIncome> {
+class _IncomeFormState extends State<IncomeForm> {
   final DateTime dt;
   final Income editIncome;
-  _AddIncomeState({this.dt, this.editIncome});
+  _IncomeFormState({this.dt, this.editIncome});
   TextEditingController incomeAmt = TextEditingController();
   TextEditingController incomeDesc = TextEditingController();
   final _incomeFormKey = GlobalKey<FormState>();
   DBProvider db = DBProvider();
+  DateTime currentDate;
   Income income;
   DateFormat dtFormat = DateFormat("yyyy-MM-dd");
   DateFormat _dateFormat = DateFormat("dd MMM yyyy");
 
+  Future _selectDate() async {
+    DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(3000));
+    if (picked != null) setState(() => currentDate = picked);
+  }
+
   initState() {
     super.initState();
+    currentDate = dt;
     if (editIncome != null) {
       setState(() {
         incomeAmt.text = editIncome.amount.toString();
@@ -41,9 +52,9 @@ class _AddIncomeState extends State<AddIncome> {
         income = Income(
           description: incomeDesc.text,
           amount: double.parse(incomeAmt.text),
-          date: dtFormat.format(dt),
-          month: dt.month.toString(),
-          year: dt.year.toString(),
+          date: dtFormat.format(currentDate),
+          month: currentDate.month.toString(),
+          year: currentDate.year.toString(),
         );
         db.addIncome(income);
         incomeAmt.clear();
@@ -57,9 +68,9 @@ class _AddIncomeState extends State<AddIncome> {
           id: editIncome.id,
           description: incomeDesc.text,
           amount: double.parse(incomeAmt.text),
-          date: dtFormat.format(dt),
-          month: dt.month.toString(),
-          year: dt.year.toString(),
+          date: dtFormat.format(currentDate),
+          month: currentDate.month.toString(),
+          year: currentDate.year.toString(),
         );
         db.updateIncome(income);
         incomeAmt.clear();
@@ -71,6 +82,7 @@ class _AddIncomeState extends State<AddIncome> {
 
   @override
   Widget build(BuildContext context) {
+    var device = MediaQuery.of(context).size;
     return OrientationBuilder(
       builder: (context, orientation) {
         return Scaffold(
@@ -80,7 +92,7 @@ class _AddIncomeState extends State<AddIncome> {
             title: Text("Add Income"),
           ),
           body: Container(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             width: MediaQuery.of(context).size.width,
             child: Form(
               key: _incomeFormKey,
@@ -90,9 +102,25 @@ class _AddIncomeState extends State<AddIncome> {
                   Container(
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.only(bottom: 12.0),
-                    child: Text(
-                      _dateFormat.format(dt),
-                      style: TextStyle(color: Colors.white, fontSize: 18.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _dateFormat.format(currentDate),
+                          style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: device.longestSide > 600 ? 18.0 : 16.0),
+                        ),
+                        IconButton(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          icon: Icon(
+                            Icons.date_range,
+                            color: Colors.white70,
+                          ),
+                          onPressed: _selectDate,
+                        )
+                      ],
                     ),
                   ),
                   Container(
@@ -110,7 +138,9 @@ class _AddIncomeState extends State<AddIncome> {
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.redAccent)),
                         labelText: "Amount",
-                        labelStyle: TextStyle(color: Colors.white70),
+                        labelStyle: TextStyle(
+                          color: Colors.white70,
+                        ),
                         suffixIcon: Icon(
                           Icons.attach_money,
                           color: Colors.white70,
@@ -164,7 +194,7 @@ class _AddIncomeState extends State<AddIncome> {
                           highlightColor: Colors.redAccent,
                           color: Colors.redAccent,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
+                            borderRadius: BorderRadius.circular(5.0),
                           ),
                           onPressed: _saveIncome,
                           child: Row(
@@ -192,7 +222,7 @@ class _AddIncomeState extends State<AddIncome> {
                           highlightColor: Colors.redAccent,
                           color: Colors.white10,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
+                            borderRadius: BorderRadius.circular(5.0),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();

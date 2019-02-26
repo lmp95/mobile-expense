@@ -5,8 +5,7 @@ import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import '../../Views/ExpenseHistory/add_history_expense.dart';
-import '../../Views/ExpenseHistory/edit_history_expense.dart';
+import '../../Views/ExpenseHistory/expense_form.dart';
 import '../../Views/ExpenseHistory/daily_chart.dart';
 
 class History extends StatefulWidget {
@@ -244,7 +243,7 @@ class _HistoryState extends State<History> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              AddHistoryExpense(
+                                              ExpenseForm(
                                                 selectedDate: selectedDate,
                                               )));
                                 },
@@ -332,7 +331,7 @@ class _HistoryState extends State<History> {
                                                   MaterialPageRoute(
                                                       builder: (BuildContext
                                                               context) =>
-                                                          EditHistoryExpense(
+                                                          ExpenseForm(
                                                             selectedDate:
                                                                 selectedDate,
                                                             expense:

@@ -34,8 +34,6 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    var device = MediaQuery.of(context).size;
-    var actualHeight = device.height - 24 - kToolbarHeight;
     return OrientationBuilder(
       builder: (context, orientation) {
         return Scaffold(
@@ -50,14 +48,8 @@ class _LandingPageState extends State<LandingPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TodayExpense(
-                    orientation: orientation,
-                    actualHeight: actualHeight,
-                  ),
-                  NavigateBtn(
-                    orientation: orientation,
-                    actualHeight: actualHeight,
-                  ),
+                  TodayExpense(),
+                  NavigateBtn(),
                   ThisMonthExpense(),
                 ],
               ),

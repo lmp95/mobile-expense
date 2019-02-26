@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import '../../Views/Income/add_income.dart';
+import '../../Views/Income/income_form.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
 import '../../Models/Income/income.dart';
@@ -71,11 +71,13 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                   padding: EdgeInsets.all(0.0),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => AddIncome(
-                                  dt: DateTime.now(),
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => IncomeForm(
+                              dt: DateTime.now(),
+                            ),
+                      ),
+                    );
                   },
                   child: Row(
                     children: <Widget>[
@@ -110,7 +112,8 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.data != "NaN" &&
-                            snapshot.data != "Infinity") {
+                            snapshot.data != "Infinity" &&
+                            double.parse(snapshot.data) <= 1.0) {
                           return LinearPercentIndicator(
                             trailing: Text(
                               (double.parse(snapshot.data) * 100)
@@ -119,7 +122,7 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                               style: TextStyle(color: Colors.white54),
                             ),
                             alignment: MainAxisAlignment.center,
-                            width: device.width - 112.0,
+                            width: device.width - 124.0,
                             lineHeight: 2.5,
                             percent: double.parse(snapshot.data),
                             backgroundColor: Colors.white70,
@@ -129,6 +132,16 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                             snapshot.data == "Infinity") {
                           return Text(
                             "Please add income to display percentage",
+                            style: TextStyle(color: Colors.white54),
+                          );
+                        } else if (double.parse(snapshot.data) > 1.0) {
+                          var overExp = _incomeTotal - finalAmt;
+                          return Text(
+                            "over-expenditurel     ".toUpperCase() +
+                                "\$" +
+                                overExp
+                                    .toString()
+                                    .replaceAllMapped(reg, mathFunc),
                             style: TextStyle(color: Colors.white54),
                           );
                         } else {
@@ -202,7 +215,7 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                                 return Container(
                                   padding: EdgeInsets.only(top: 4.0),
                                   child: Text(
-                                    "\$" + _incomeTotal.toString(),
+                                    "\$ 0.0",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16.0,

@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../Views/ExpenseHistory/history.dart';
 import '../../Views/Income/income.dart';
+import '../../Views/Analystics/analystics_main.dart';
 
 class NavigateBtn extends StatefulWidget {
-  final orientation;
-  final actualHeight;
-  NavigateBtn({this.orientation, this.actualHeight});
   @override
-  _NavigateBtnState createState() =>
-      _NavigateBtnState(orientation: orientation, actualHeight: actualHeight);
+  _NavigateBtnState createState() => _NavigateBtnState();
 }
 
 class _NavigateBtnState extends State<NavigateBtn> {
-  final orientation;
-  final actualHeight;
-  _NavigateBtnState({this.orientation, this.actualHeight});
-
   @override
   void initState() {
     super.initState();
@@ -27,9 +20,6 @@ class _NavigateBtnState extends State<NavigateBtn> {
     return Container(
       margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
       padding: EdgeInsets.symmetric(horizontal: 8.0),
-      height: orientation == Orientation.portrait
-          ? actualHeight / 5
-          : actualHeight / 2.5,
       child: Row(
         children: <Widget>[
           Container(
@@ -39,8 +29,16 @@ class _NavigateBtnState extends State<NavigateBtn> {
                 borderRadius: BorderRadius.circular(10.0),
                 color: Colors.redAccent),
             child: FlatButton(
+              splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => AnalysticsMain(),
+                  ),
+                );
+              },
               padding: EdgeInsets.all(0.0),
               child: Column(
                 children: <Widget>[
@@ -48,7 +46,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                     padding: EdgeInsets.only(left: 16.0, top: 8.0),
                     alignment: Alignment.topLeft,
                     child: CircleAvatar(
-                      backgroundColor: Colors.black26,
+                      backgroundColor: Colors.black12,
                       maxRadius: 36.0,
                       child: Icon(
                         Icons.show_chart,
@@ -58,11 +56,14 @@ class _NavigateBtnState extends State<NavigateBtn> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 16.0, right: 16.0),
+                    padding:
+                        EdgeInsets.only(top: 8.0, right: 16.0, bottom: 12.0),
                     alignment: Alignment.bottomRight,
                     child: Text(
                       "Analytics",
-                      style: TextStyle(color: Colors.white, fontSize: 20.0),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: device.longestSide > 600 ? 18.0 : 16.0),
                     ),
                   ),
                 ],
@@ -75,14 +76,13 @@ class _NavigateBtnState extends State<NavigateBtn> {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(bottom: 4.0),
+                  padding: EdgeInsets.symmetric(vertical: 4.0),
                   width: (device.width / 2) - 16.0,
-                  height: orientation == Orientation.portrait
-                      ? ((actualHeight / 5) / 2) - 4
-                      : ((actualHeight / 2.5) / 2 - 4),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Color(0xFF38C8DD)),
                   child: FlatButton(
+                    splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onPressed: () {
                       Navigator.push(
@@ -99,7 +99,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                         Container(
                           padding: EdgeInsets.only(left: 12.0),
                           child: CircleAvatar(
-                            backgroundColor: Colors.black26,
+                            backgroundColor: Colors.black12,
                             child: Icon(
                               Icons.money_off,
                               size: 32.0,
@@ -111,8 +111,10 @@ class _NavigateBtnState extends State<NavigateBtn> {
                           padding: EdgeInsets.only(right: 12.0),
                           child: Text(
                             "Daily Expense",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize:
+                                    device.longestSide > 600 ? 16.0 : 13.0),
                           ),
                         ),
                       ],
@@ -121,14 +123,13 @@ class _NavigateBtnState extends State<NavigateBtn> {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 4.0),
+                  padding: EdgeInsets.symmetric(vertical: 4.0),
                   width: (device.width / 2) - 16.0,
-                  height: orientation == Orientation.portrait
-                      ? ((actualHeight / 5) / 2) - 4
-                      : ((actualHeight / 2.5) / 2 - 4),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Color(0xFF7D60BE)),
                   child: FlatButton(
+                    splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onPressed: () {
                       Navigator.push(
@@ -143,7 +144,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                         Container(
                           padding: EdgeInsets.only(left: 12.0),
                           child: CircleAvatar(
-                            backgroundColor: Colors.black26,
+                            backgroundColor: Colors.black12,
                             child: Icon(
                               Icons.attach_money,
                               size: 32.0,
@@ -155,8 +156,10 @@ class _NavigateBtnState extends State<NavigateBtn> {
                           padding: EdgeInsets.only(right: 12.0),
                           child: Text(
                             "Monthly Income",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 16.0),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize:
+                                    device.longestSide > 600 ? 16.0 : 13.0),
                           ),
                         ),
                       ],
