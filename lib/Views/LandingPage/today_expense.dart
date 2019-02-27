@@ -303,7 +303,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                             fontSize: device.height <= 600 &&
                                                     orientation ==
                                                         Orientation.portrait
-                                                ? 16.0
+                                                ? 13.0
                                                 : 16.0),
                                       ),
                                       Container(
@@ -326,7 +326,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                                 finalAmt.toString(),
                                                 style: TextStyle(
                                                     fontSize: device.height <=
-                                                                480 &&
+                                                                600 &&
                                                             orientation ==
                                                                 Orientation
                                                                     .portrait

@@ -138,7 +138,7 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                           var overExp = _incomeTotal - finalAmt;
                           return Text(
                             "over-expenditurel     ".toUpperCase() +
-                                "\$" +
+                                "\$ " +
                                 overExp
                                     .toString()
                                     .replaceAllMapped(reg, mathFunc),

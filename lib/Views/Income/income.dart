@@ -219,7 +219,8 @@ class _IncomeState extends State<Income> {
                     Container(
                       child: Text(
                         "Monthly Income List",
-                        style: TextStyle(fontSize: 20.0),
+                        style: TextStyle(
+                            fontSize: dev.longestSide > 600 ? 20.0 : 16.0),
                       ),
                     ),
                     FlatButton(
@@ -243,7 +244,8 @@ class _IncomeState extends State<Income> {
                           ),
                           Text(
                             "Add Income",
-                            style: TextStyle(fontSize: 16.0),
+                            style: TextStyle(
+                                fontSize: dev.longestSide > 600 ? 16.0 : 14.0),
                           )
                         ],
                       ),

@@ -6,6 +6,8 @@ import 'package:path/path.dart';
 import '../Models/Expense/expense.dart';
 import 'package:intl/intl.dart';
 import '../Models/Income/income.dart';
+import '../Models/Analystic/categories.dart';
+import 'package:flutter/material.dart';
 
 class DBProvider {
   static Database _database;
@@ -197,5 +199,51 @@ class DBProvider {
     await dbClient.transaction((txn) async {
       return await txn.delete("income", where: "id = ?", whereArgs: [incomeID]);
     });
+  }
+
+  // Categories Monthly Analystics --------------------------------------------------------------------------------
+  Future<List<Categories>> getEachCatMonthExp(
+      String thisMonth, String thisYear) async {
+    List<Categories> catExpList = List();
+    var colorList = [
+      Color(0xFFFE5F55),
+      Color(0xFF52D1DC),
+      Color(0xFF8661C1),
+      Color(0xFF7097A8),
+      Color(0xFF1EA896),
+      Color(0xFFF5853F),
+      Color(0xFFFFE787),
+      Color(0xFF19647E)
+    ];
+    var catList = [
+      'Clothing',
+      'Entertainment',
+      'Food',
+      'Gifts/Donations',
+      'Medical/Healthcare',
+      'Personal',
+      'Transportation',
+      'Utilities'
+    ];
+    var dbClient = await _db;
+    for (var i = 0; i < catList.length; i++) {
+      var cat = catList[i];
+      var totalExp = 0.0;
+      var qResult = await dbClient.rawQuery(
+          "SELECT * FROM expense WHERE month = '$thisMonth' AND year='$thisYear' AND category = '$cat' ORDER BY date DESC");
+      for (var exp in qResult) {
+        totalExp += exp['price'];
+      }
+      catExpList.add(
+        Categories(
+          catId: i + 1,
+          year: thisYear,
+          month: thisMonth,
+          totalAmt: totalExp,
+          color: colorList[i],
+        ),
+      );
+    }
+    return catExpList;
   }
 }
