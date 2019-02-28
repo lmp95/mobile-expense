@@ -4,6 +4,9 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import '../../Database/expense_db.dart';
 import '../../Models/Analystic/categories.dart';
+import '../../Views/Analystics/dummy_chart_data.dart';
+import '../../Views/Analystics/generate_cate_monthly_exp_list.dart';
+import '../../Views/Analystics/categories_percentage.dart';
 
 class AnalysticsMain extends StatefulWidget {
   @override
@@ -18,6 +21,9 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
   DBProvider _dbProvider = DBProvider();
   List<Categories> catExpList = [];
   var loading = true;
+  DateTime _selectedMonth = DateTime.now();
+  bool noPieChart = false;
+  var max = 0.0;
 
   @override
   void initState() {
@@ -25,40 +31,64 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
     _getCatExp();
   }
 
-  _generateReport(String category) {
-    print(category);
-  }
-
   _showMonthDialog() {
-    showMonthPicker(context: context, initialDate: DateTime.now())
-        .then((date) {});
+    showMonthPicker(context: context, initialDate: _selectedMonth).then((date) {
+      if (date == null) {
+        setState(() {
+          _selectedMonth = _selectedMonth;
+          loading = true;
+        });
+      } else {
+        setState(() {
+          _selectedMonth = date;
+          loading = true;
+        });
+      }
+      _getCatExp();
+    });
   }
 
   _getCatExp() async {
+    max = 0.0;
     await _dbProvider
         .getEachCatMonthExp(
-      DateTime.now().month.toString(),
-      DateTime.now().year.toString(),
+      _selectedMonth.month.toString(),
+      _selectedMonth.year.toString(),
     )
         .then((results) {
       catExpList = results;
     });
-    _createPieChart();
-    setState(() {
-      loading = false;
-    });
+    for (var catExp in catExpList) {
+      max += catExp.totalAmt;
+    }
+    if (max == 0.0) {
+      setState(() {
+        noPieChart = true;
+        loading = false;
+      });
+      _createPieChart();
+    } else {
+      setState(() {
+        noPieChart = false;
+        loading = false;
+      });
+      _createPieChart();
+    }
   }
 
   _createPieChart() {
     series = [
       new charts.Series(
-        id: 'Sales',
+        id: 'ExpenseByCat',
         domainFn: (Categories cate, _) => cate.catId,
         measureFn: (Categories cate, _) => cate.totalAmt,
-        data: catExpList,
-        labelAccessorFn: (Categories cate, _) => cate.totalAmt == 0.0
+        data: noPieChart == false ? catExpList : dummyList,
+        labelAccessorFn: (Categories cate, _) => noPieChart == true
             ? null
-            : "\$ " + cate.totalAmt.toString().replaceAllMapped(reg, mathFunc),
+            : cate.totalAmt == 0.0
+                ? null
+                : "\$ " +
+                    cate.totalAmt.toString().replaceAllMapped(reg, mathFunc),
         colorFn: (Categories cate, _) => cate.color,
       )
     ];
@@ -99,7 +129,7 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                           padding: EdgeInsets.symmetric(horizontal: 12.0),
                           onPressed: _showMonthDialog,
                           child: Text(
-                            _monthFormat.format(DateTime.now()).toUpperCase(),
+                            _monthFormat.format(_selectedMonth).toUpperCase(),
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: dev.longestSide > 600 ? 18.0 : 14.0),
@@ -110,30 +140,70 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                   ),
                 ),
                 Container(
-                    margin: EdgeInsets.all(8.0),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                    height: dev.longestSide / 3,
-                    child: loading == false
-                        ? charts.PieChart(
-                            series,
-                            defaultRenderer: new charts.ArcRendererConfig(
-                              strokeWidthPx: 0.0,
-                              arcWidth: 15,
-                              arcRendererDecorators: [
-                                new charts.ArcLabelDecorator(
-                                  labelPadding: 5,
-                                  outsideLabelStyleSpec: charts.TextStyleSpec(
-                                      color: charts.MaterialPalette.white,
-                                      fontSize: 10),
-                                  labelPosition: charts.ArcLabelPosition.auto,
-                                )
-                              ],
-                            ),
-                          )
-                        : Center(
-                            child: CircularProgressIndicator(),
-                          )),
+                  margin: EdgeInsets.all(8.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                  height: dev.longestSide / 3,
+                  child: loading == false
+                      ? Stack(
+                          children: <Widget>[
+                            noPieChart == true
+                                ? Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Not Available!",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18.0),
+                                    ),
+                                  )
+                                : Container(
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Total Expense",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14.0),
+                                          ),
+                                        ),
+                                        Text(
+                                          "\$ " +
+                                              max.toString().replaceAllMapped(
+                                                  reg, mathFunc),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.0),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                            charts.PieChart(
+                              series,
+                              defaultRenderer: new charts.ArcRendererConfig(
+                                strokeWidthPx: 0.0,
+                                arcWidth: 15,
+                                arcRendererDecorators: [
+                                  new charts.ArcLabelDecorator(
+                                    labelPadding: 5,
+                                    outsideLabelStyleSpec: charts.TextStyleSpec(
+                                        color: charts.MaterialPalette.white,
+                                        fontSize: 10),
+                                    labelPosition: charts.ArcLabelPosition.auto,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -142,21 +212,28 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Container(
-                            width: 150.0,
+                            width: dev.width / 2 - 32.0,
                             height: 15.0,
                             margin: EdgeInsets.all(4.0),
                             child: Container(
                               child: FlatButton(
                                 highlightColor: Colors.transparent,
                                 padding: EdgeInsets.all(0.0),
-                                onPressed: () {},
+                                onPressed: () {
+                                  generateReport(_selectedMonth, 'Clothing',
+                                      context, Color(0xFFFE5F55));
+                                },
                                 child: Row(
                                   children: <Widget>[
                                     Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                        color: Color(0xFFFE5F55),
+                                      ),
                                       margin: EdgeInsets.only(right: 8.0),
                                       width: 10.0,
                                       height: 10.0,
-                                      color: Color(0xFFFE5F55),
                                     ),
                                     Text(
                                       "Clothing",
@@ -170,21 +247,31 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                             ),
                           ),
                           Container(
-                            width: 150.0,
+                            width: dev.width / 2 - 32.0,
                             height: 15.0,
                             margin: EdgeInsets.all(4.0),
                             child: Container(
                               child: FlatButton(
                                 highlightColor: Colors.transparent,
                                 padding: EdgeInsets.all(0.0),
-                                onPressed: () {},
+                                onPressed: () {
+                                  generateReport(
+                                      _selectedMonth,
+                                      'Entertainment',
+                                      context,
+                                      Color(0xFF52D1DC));
+                                },
                                 child: Row(
                                   children: <Widget>[
                                     Container(
                                       margin: EdgeInsets.only(right: 8.0),
                                       width: 10.0,
                                       height: 10.0,
-                                      color: Color(0xFF52D1DC),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                        color: Color(0xFF52D1DC),
+                                      ),
                                     ),
                                     Text(
                                       "Entertainment",
@@ -198,21 +285,28 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                             ),
                           ),
                           Container(
-                            width: 150.0,
+                            width: dev.width / 2 - 32.0,
                             height: 15.0,
                             margin: EdgeInsets.all(4.0),
                             child: Container(
                               child: FlatButton(
                                 highlightColor: Colors.transparent,
                                 padding: EdgeInsets.all(0.0),
-                                onPressed: () {},
+                                onPressed: () {
+                                  generateReport(_selectedMonth, 'Food',
+                                      context, Color(0xFF8661C1));
+                                },
                                 child: Row(
                                   children: <Widget>[
                                     Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                        color: Color(0xFF8661C1),
+                                      ),
                                       margin: EdgeInsets.only(right: 8.0),
                                       width: 10.0,
                                       height: 10.0,
-                                      color: Color(0xFF8661C1),
                                     ),
                                     Text(
                                       "Food",
@@ -226,21 +320,31 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                             ),
                           ),
                           Container(
-                            width: 150.0,
+                            width: dev.width / 2 - 32.0,
                             height: 15.0,
                             margin: EdgeInsets.all(4.0),
                             child: Container(
                               child: FlatButton(
                                 highlightColor: Colors.transparent,
                                 padding: EdgeInsets.all(0.0),
-                                onPressed: () {},
+                                onPressed: () {
+                                  generateReport(
+                                      _selectedMonth,
+                                      'Gifts/Donations',
+                                      context,
+                                      Color(0xFF7097A8));
+                                },
                                 child: Row(
                                   children: <Widget>[
                                     Container(
                                       margin: EdgeInsets.only(right: 8.0),
                                       width: 10.0,
                                       height: 10.0,
-                                      color: Color(0xFF7097A8),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                        color: Color(0xFF7097A8),
+                                      ),
                                     ),
                                     Text(
                                       "Gifts/Donations",
@@ -259,7 +363,7 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Container(
-                            width: 150.0,
+                            width: dev.width / 2 - 32.0,
                             height: 15.0,
                             margin: EdgeInsets.all(4.0),
                             child: Container(
@@ -267,7 +371,11 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                                 highlightColor: Colors.transparent,
                                 padding: EdgeInsets.all(0.0),
                                 onPressed: () {
-                                  _generateReport('Medical/Healthcare');
+                                  generateReport(
+                                      _selectedMonth,
+                                      'Medical/Healthcare',
+                                      context,
+                                      Color(0xFF1EA896));
                                 },
                                 child: Row(
                                   children: <Widget>[
@@ -275,7 +383,11 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                                       margin: EdgeInsets.only(right: 8.0),
                                       width: 10.0,
                                       height: 10.0,
-                                      color: Color(0xFF1EA896),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                        color: Color(0xFF1EA896),
+                                      ),
                                     ),
                                     Text(
                                       "Medical/Healthcare",
@@ -289,21 +401,28 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                             ),
                           ),
                           Container(
-                            width: 150.0,
+                            width: dev.width / 2 - 32.0,
                             height: 15.0,
                             margin: EdgeInsets.all(4.0),
                             child: Container(
                               child: FlatButton(
                                 highlightColor: Colors.transparent,
                                 padding: EdgeInsets.all(0.0),
-                                onPressed: () {},
+                                onPressed: () {
+                                  generateReport(_selectedMonth, 'Personal',
+                                      context, Color(0xFFF5853F));
+                                },
                                 child: Row(
                                   children: <Widget>[
                                     Container(
                                       margin: EdgeInsets.only(right: 8.0),
                                       width: 10.0,
                                       height: 10.0,
-                                      color: Color(0xFFF5853F),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                        color: Color(0xFFF5853F),
+                                      ),
                                     ),
                                     Text(
                                       "Personal",
@@ -317,21 +436,31 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                             ),
                           ),
                           Container(
-                            width: 150.0,
+                            width: dev.width / 2 - 32.0,
                             height: 15.0,
                             margin: EdgeInsets.all(4.0),
                             child: Container(
                               child: FlatButton(
                                 highlightColor: Colors.transparent,
                                 padding: EdgeInsets.all(0.0),
-                                onPressed: () {},
+                                onPressed: () {
+                                  generateReport(
+                                      _selectedMonth,
+                                      'Transportation',
+                                      context,
+                                      Color(0xFFFFE787));
+                                },
                                 child: Row(
                                   children: <Widget>[
                                     Container(
                                       margin: EdgeInsets.only(right: 8.0),
                                       width: 10.0,
                                       height: 10.0,
-                                      color: Color(0xFFFFE787),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                        color: Color(0xFFFFE787),
+                                      ),
                                     ),
                                     Text(
                                       "Transportation",
@@ -345,24 +474,31 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                             ),
                           ),
                           Container(
-                            width: 150.0,
+                            width: dev.width / 2 - 32.0,
                             height: 15.0,
                             margin: EdgeInsets.all(4.0),
                             child: Container(
                               child: FlatButton(
                                 highlightColor: Colors.transparent,
                                 padding: EdgeInsets.all(0.0),
-                                onPressed: () {},
+                                onPressed: () {
+                                  generateReport(_selectedMonth, 'Utilities',
+                                      context, Color(0xFF19647E));
+                                },
                                 child: Row(
                                   children: <Widget>[
                                     Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                        color: Color(0xFF19647E),
+                                      ),
                                       margin: EdgeInsets.only(right: 8.0),
                                       width: 10.0,
                                       height: 10.0,
-                                      color: Color(0xFF19647E),
                                     ),
                                     Text(
-                                      "Transportation",
+                                      "Utilities",
                                       style: TextStyle(
                                           color: Colors.white,
                                           letterSpacing: 1.1),
@@ -376,7 +512,8 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
                       ),
                     ],
                   ),
-                )
+                ),
+                PercentageCategories()
               ],
             ),
           ),

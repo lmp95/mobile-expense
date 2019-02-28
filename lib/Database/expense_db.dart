@@ -246,4 +246,24 @@ class DBProvider {
     }
     return catExpList;
   }
+
+  // Get Specific Category Total Expense List
+  Future<List<Expense>> getSpecCateExpList(
+      String thisMonth, String thisYear, String cate) async {
+    List<Expense> specCatExpList = List();
+    var dbClient = await _db;
+    var qResult = await dbClient.rawQuery(
+        "SELECT * FROM expense WHERE month = '$thisMonth' AND year='$thisYear' AND category = '$cate' ORDER BY date ASC");
+    for (var i = 0; i < qResult.length; i++) {
+      specCatExpList.add(Expense(
+          id: qResult[i]["id"],
+          item: qResult[i]['item'],
+          amount: qResult[i]['price'],
+          category: qResult[i]['category'],
+          date: qResult[i]['date'],
+          month: qResult[i]['month'],
+          year: qResult[i]['year']));
+    }
+    return specCatExpList;
+  }
 }
