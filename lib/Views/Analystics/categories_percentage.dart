@@ -1,54 +1,120 @@
 import 'package:flutter/material.dart';
+import '../../Views/Analystics/generate_cate_monthly_exp_list.dart';
+import '../../Models/Analystic/categories.dart';
+import '../../Database/expense_db.dart';
 
 class PercentageCategories extends StatefulWidget {
+  final List<Categories> cateExpList;
+  final DateTime selectedMonth;
+  PercentageCategories({this.selectedMonth, this.cateExpList});
   @override
   _PercentageCategoriesState createState() => _PercentageCategoriesState();
 }
 
 class _PercentageCategoriesState extends State<PercentageCategories> {
+  List<Categories> cateExpList = [];
+  DBProvider _dbProvider = DBProvider();
+  List<double> percentList = [];
+  List<Color> colorList = [
+    Color(0xFFFE5F55),
+    Color(0xFF52D1DC),
+    Color(0xFF8661C1),
+    Color(0xFF7097A8),
+    Color(0xFF1EA896),
+    Color(0xFFF5853F),
+    Color(0xFFFFE787),
+    Color(0xFF19647E),
+  ];
+  List<String> categoriesList = [
+    "Clothing",
+    "Entertainment",
+    "Food",
+    "Gifts/Donations",
+    "Medical/Healthcare",
+    "Personal",
+    "Transportation",
+    "Utilities",
+  ];
+  List<String> iconList = [
+    "Icons/xxxhdpi/clothing.png",
+    "Icons/xxxhdpi/entertainment.png",
+    "Icons/xxxhdpi/food.png",
+    "Icons/xxxhdpi/donations.png",
+    "Icons/xxxhdpi/healthcare.png",
+    "Icons/xxxhdpi/personal.png",
+    "Icons/xxxhdpi/transportation.png",
+    "Icons/xxxhdpi/utilities.png",
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var device = MediaQuery.of(context).size;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: device.width / 4,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Color(0xFFFE5F55),
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 4.0, vertical: 8.0),
-                          child: Icon(
-                            Icons.train,
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(top: 16.0),
+        child: FutureBuilder(
+          future: _dbProvider.getEachCatMonthExp(
+            widget.selectedMonth.month.toString(),
+            widget.selectedMonth.year.toString(),
+          ),
+          builder: (context, snapshot) {
+            var percentList = [];
+            var totalExp = 0.0;
+            var onePercent = 0.0;
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                color: Colors.white,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                  ),
+                ),
+              );
+            } else {
+              for (var item in snapshot.data) {
+                for (var cateExp in snapshot.data) {
+                  totalExp += cateExp.totalAmt;
+                }
+                onePercent = totalExp / 100;
+                percentList.add(item.totalAmt / onePercent);
+              }
+              return ListView.builder(
+                itemCount: 8,
+                itemBuilder: (context, index) {
+                  return Container(
+                    color: Colors.white,
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0.0),
+                      onPressed: () {
+                        generateReport(widget.selectedMonth,
+                            categoriesList[index], context, colorList[index]);
+                      },
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: colorList[index],
+                          child: Image.asset(
+                            iconList[index],
+                            height: 24,
                             color: Colors.white,
-                            size: 32.0,
                           ),
                         ),
-                        Text(
-                          "11.61%",
-                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                        title: Text(categoriesList[index]),
+                        subtitle: Text("Total Expense"),
+                        trailing: Text(
+                          percentList[index].toStringAsFixed(2) + " %",
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          )
-        ],
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }
