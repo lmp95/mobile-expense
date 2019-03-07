@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../Views/Analystics/generate_cate_monthly_exp_list.dart';
-import '../../Models/Analystic/categories.dart';
-import '../../Database/expense_db.dart';
+import '../../../Views/Analystics/Month/generate_cate_monthly_exp_list.dart';
+import '../../../Models/Analystic/categories.dart';
+import '../../../Database/expense_db.dart';
 
 class PercentageCategories extends StatefulWidget {
   final List<Categories> cateExpList;
@@ -55,7 +55,6 @@ class _PercentageCategoriesState extends State<PercentageCategories> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.only(top: 16.0),
         child: FutureBuilder(
           future: _dbProvider.getEachCatMonthExp(
             widget.selectedMonth.month.toString(),
@@ -76,6 +75,7 @@ class _PercentageCategoriesState extends State<PercentageCategories> {
               );
             } else {
               for (var item in snapshot.data) {
+                totalExp = 0.0;
                 for (var cateExp in snapshot.data) {
                   totalExp += cateExp.totalAmt;
                 }
@@ -105,7 +105,9 @@ class _PercentageCategoriesState extends State<PercentageCategories> {
                         title: Text(categoriesList[index]),
                         subtitle: Text("Total Expense"),
                         trailing: Text(
-                          percentList[index].toStringAsFixed(2) + " %",
+                          percentList[index].toString() == "NaN"
+                              ? "0.0 %"
+                              : percentList[index].toStringAsFixed(2) + " %",
                         ),
                       ),
                     ),

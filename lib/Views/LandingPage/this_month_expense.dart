@@ -5,6 +5,7 @@ import '../../Database/expense_db.dart';
 import '../../Models/Expense/expense.dart';
 import '../../Models/Income/income.dart';
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 class ThisMonthExpense extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
   DBProvider db = DBProvider();
   RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
   Function mathFunc = (Match match) => '${match[1]},';
+  DateFormat _dateFormat = DateFormat("MMMM");
   var finalAmt;
   var totalIncome;
   var totalExp;
@@ -63,8 +65,8 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "This Month",
-                  style: TextStyle(color: Colors.white, fontSize: 24.0),
+                  _dateFormat.format(DateTime.now()).toString().toUpperCase(),
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
                 ),
                 FlatButton(
                   splashColor: Colors.transparent,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../Database/expense_db.dart';
-import '../../Models/Expense/expense.dart';
+import '../../../Database/expense_db.dart';
+import '../../../Models/Expense/expense.dart';
 
 DBProvider _dbProvider = DBProvider();
 RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');

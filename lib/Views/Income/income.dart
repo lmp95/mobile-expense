@@ -57,7 +57,10 @@ class _IncomeState extends State<Income> {
   }
 
   _showModalSheet() {
-    showMonthPicker(context: context, initialDate: _currentDate).then((date) {
+    showMonthPicker(
+      context: context,
+      initialDate: _currentDate,
+    ).then((date) {
       if (date == null) {
         setState(() {
           _currentDate = _currentDate;

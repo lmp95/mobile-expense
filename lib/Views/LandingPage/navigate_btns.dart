@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../Views/ExpenseHistory/history.dart';
 import '../../Views/Income/income.dart';
-import '../../Views/Analystics/analystics_main.dart';
+import '../../Views/Analystics/Month/analystics_main.dart';
+import '../../Views/Analystics/Year/analystics_main_year.dart';
 
 class NavigateBtn extends StatefulWidget {
   @override
@@ -14,11 +15,125 @@ class _NavigateBtnState extends State<NavigateBtn> {
     super.initState();
   }
 
+  void _showBtns() {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                color: Color(0xFF31373F),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Container(
+                      child: FlatButton(
+                        onPressed: () {},
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "Icons/xxxhdpi/weekly.png",
+                              height: 36,
+                              color: Colors.white,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                "Week".toUpperCase(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  letterSpacing: 2.0,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  AnalysticsMain(),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "Icons/xxxhdpi/monthly.png",
+                              height: 36,
+                              color: Colors.white,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                "Month".toUpperCase(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  letterSpacing: 2.0,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  YearlyAnalysticsMain(),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "Icons/xxxhdpi/yearly.png",
+                              height: 36,
+                              color: Colors.white,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                "Year".toUpperCase(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  letterSpacing: 2.0,
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var device = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+      margin: EdgeInsets.only(top: 16.0, bottom: 4.0),
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: <Widget>[
@@ -32,12 +147,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => AnalysticsMain(),
-                  ),
-                );
+                _showBtns();
               },
               padding: EdgeInsets.all(0.0),
               child: Column(
@@ -79,18 +189,21 @@ class _NavigateBtnState extends State<NavigateBtn> {
                   padding: EdgeInsets.symmetric(vertical: 4.0),
                   width: (device.width / 2) - 16.0,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Color(0xFF38C8DD)),
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Color(0xFF38C8DD),
+                  ),
                   child: FlatButton(
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) => History(
-                                    initialDate: DateTime.now(),
-                                  )));
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => History(
+                                initialDate: DateTime.now(),
+                              ),
+                        ),
+                      );
                     },
                     padding: EdgeInsets.all(0.0),
                     child: Row(

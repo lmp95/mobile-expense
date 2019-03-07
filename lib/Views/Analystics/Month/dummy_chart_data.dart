@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../Models/Analystic/categories.dart';
+import '../../../Models/Analystic/categories.dart';
 
 List<Categories> dummyList = [
   Categories(
