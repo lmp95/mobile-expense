@@ -9,6 +9,7 @@ import '../Models/Income/income.dart';
 import '../Models/Analystic/categories.dart';
 import 'package:flutter/material.dart';
 import '../Models/Analystic/annual_expense.dart';
+import '../Models/Analystic/annual_category.dart';
 
 class DBProvider {
   static Database _database;
@@ -327,6 +328,47 @@ class DBProvider {
           ),
         );
       }
+    }
+    return catExpList;
+  }
+
+  // Annual Expense of each Category -------------------------------------------------------
+  Future<List<AnnualCategory>> annualCatExp(String thisYear) async {
+    List<AnnualCategory> catExpList = List();
+    var catList = [
+      'Clothing',
+      'Entertainment',
+      'Food',
+      'Gifts/Donations',
+      'Medical/Healthcare',
+      'Personal',
+      'Transportation',
+      'Utilities'
+    ];
+    var colorList = [
+      Color(0xFFFE5F55),
+      Color(0xFF52D1DC),
+      Color(0xFF8661C1),
+      Color(0xFF7097A8),
+      Color(0xFF1EA896),
+      Color(0xFFF5853F),
+      Color(0xFFFFE787),
+      Color(0xFF19647E)
+    ];
+    var dbClient = await _db;
+    for (var i = 0; i < catList.length; i++) {
+      var cat = catList[i];
+      var totalExp = 0.0;
+      var qResult = await dbClient.rawQuery(
+          "SELECT * FROM expense WHERE year='$thisYear' AND category = '$cat' ORDER BY date DESC");
+      for (var exp in qResult) {
+        totalExp += exp['price'];
+      }
+      catExpList.add(AnnualCategory(
+          category: i + 1,
+          color: colorList[i],
+          totalAmt: totalExp,
+          year: thisYear));
     }
     return catExpList;
   }
