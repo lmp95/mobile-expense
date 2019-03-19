@@ -72,6 +72,23 @@ class _YearlyAnalysticsMainState extends State<YearlyAnalysticsMain> {
       annualTotal = 0.0;
       for (var result in results) {
         annualTotal += result.totalAmt;
+        if (result.category == "Clothing") {
+          clothingList.add(result);
+        } else if (result.category == "Entertainment") {
+          entertainList.add(result);
+        } else if (result.category == "Food") {
+          foodList.add(result);
+        } else if (result.category == "Gifts/Donations") {
+          giftsList.add(result);
+        } else if (result.category == "Medical/Healthcare") {
+          healthList.add(result);
+        } else if (result.category == "Personal") {
+          personalList.add(result);
+        } else if (result.category == "Transportation") {
+          transportList.add(result);
+        } else {
+          utilitiesList.add(result);
+        }
         if (annualTotal == 0.0) {
           setState(() {
             pieChart = false;
@@ -80,23 +97,6 @@ class _YearlyAnalysticsMainState extends State<YearlyAnalysticsMain> {
           setState(() {
             pieChart = true;
           });
-          if (result.category == "Clothing") {
-            clothingList.add(result);
-          } else if (result.category == "Entertainment") {
-            entertainList.add(result);
-          } else if (result.category == "Food") {
-            foodList.add(result);
-          } else if (result.category == "Gifts/Donations") {
-            giftsList.add(result);
-          } else if (result.category == "Medical/Healthcare") {
-            healthList.add(result);
-          } else if (result.category == "Personal") {
-            personalList.add(result);
-          } else if (result.category == "Transportation") {
-            transportList.add(result);
-          } else {
-            utilitiesList.add(result);
-          }
         }
       }
     });
@@ -177,7 +177,9 @@ class _YearlyAnalysticsMainState extends State<YearlyAnalysticsMain> {
         adapter: PickerDataAdapter<String>(
             pickerdata: new JsonDecoder().convert(YearList), isArray: true),
         hideHeader: true,
-        selecteds: [int.parse(currentIndex)],
+        selecteds: [
+          int.parse(currentIndex),
+        ],
         textStyle: TextStyle(fontSize: 16.0, color: Colors.black87),
         title: new Text("Choose Year"),
         onConfirm: (Picker picker, List value) {
@@ -293,7 +295,9 @@ class _YearlyAnalysticsMainState extends State<YearlyAnalysticsMain> {
                           ],
                         ),
                       ),
-                      YearlyCategoryList(),
+                      YearlyCategoryList(
+                        selectedYear: _currentYear,
+                      ),
                       AnnualChart(
                         chart: chart,
                         pieChart: pieChart,

@@ -3,6 +3,7 @@ import '../../Views/ExpenseHistory/history.dart';
 import '../../Views/Income/income.dart';
 import '../../Views/Analystics/Month/analystics_main.dart';
 import '../../Views/Analystics/Year/analystics_main_year.dart';
+import '../../Views/Analystics/Week/weekly_analystics_main.dart';
 
 class NavigateBtn extends StatefulWidget {
   @override
@@ -30,7 +31,14 @@ class _NavigateBtnState extends State<NavigateBtn> {
                   children: <Widget>[
                     Container(
                       child: FlatButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      WeekAnalystics()));
+                        },
                         child: Column(
                           children: [
                             Image.asset(

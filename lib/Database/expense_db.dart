@@ -372,4 +372,23 @@ class DBProvider {
     }
     return catExpList;
   }
+
+  // Annual Each Category Expense List -------------------------------------------------------
+  Future<List<Expense>> annualCatExpList(String thisYear, String cate) async {
+    List<Expense> annualExpList = List();
+    var dbClient = await _db;
+    var qResult = await dbClient.rawQuery(
+        "SELECT * FROM expense WHERE year='$thisYear' AND category = '$cate' ORDER BY date ASC");
+    for (var i = 0; i < qResult.length; i++) {
+      annualExpList.add(Expense(
+          id: qResult[i]["id"],
+          item: qResult[i]['item'],
+          amount: qResult[i]['price'],
+          category: qResult[i]['category'],
+          date: qResult[i]['date'],
+          month: qResult[i]['month'],
+          year: qResult[i]['year']));
+    }
+    return annualExpList;
+  }
 }
