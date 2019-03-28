@@ -385,7 +385,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                               selectedDate: _dateFormat
                                                   .format(DateTime.now()),
                                             )));
-                              }, //_addRecord,
+                              },
                             ),
                           ),
                           Container(

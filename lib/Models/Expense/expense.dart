@@ -1,6 +1,6 @@
 class Expense {
   int id;
-  String date;
+  String date; // Format - 2019-01-31
   String item;
   double amount;
   String category;

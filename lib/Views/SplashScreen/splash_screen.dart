@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               Container(
                 child: Text(
-                  "Expense".toUpperCase(),
+                  "Expenager".toUpperCase(),
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 24.0,
@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               Container(
                 child: Text(
-                  "Your Daily Expense Manager",
+                  "Track your daily expense with Expenager",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 16.0,

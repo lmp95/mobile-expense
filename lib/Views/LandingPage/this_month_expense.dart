@@ -52,6 +52,28 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
     }
   }
 
+  Future<double> getBalance() async {
+    double balance = 0.0;
+    double expTotal = 0.0;
+    double incomeTotal = 0.0;
+    await db
+        .getMonthlyExpense(DateTime.now().month.toString())
+        .then((expValue) {
+      for (var expAmt in expValue) {
+        expTotal += expAmt.amount;
+      }
+    });
+    await db
+        .getMonthlyIncome(DateTime.now().month.toString())
+        .then((incomeValue) {
+      for (var income in incomeValue) {
+        incomeTotal += income.amount;
+      }
+    });
+    balance = incomeTotal - expTotal;
+    return balance;
+  }
+
   @override
   Widget build(BuildContext context) {
     var device = MediaQuery.of(context).size;
@@ -234,7 +256,7 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                     Container(
                       padding: EdgeInsets.only(top: 8.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Container(
                             child: Text(
@@ -262,6 +284,56 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                                             .replaceAllMapped(reg, mathFunc),
                                     style: TextStyle(
                                         color: Colors.white,
+                                        fontSize: 16.0,
+                                        letterSpacing: 1.5),
+                                  );
+                                } else {
+                                  return Text(
+                                    "\$0.0",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        letterSpacing: 1.5),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Container(
+                            child: Text(
+                              "Balance".toUpperCase(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                  letterSpacing: 2.0),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 4.0),
+                            child: FutureBuilder(
+                              future: getBalance(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  var balance = snapshot.data;
+                                  return Text(
+                                    "\$" +
+                                        balance
+                                            .toString()
+                                            .replaceAllMapped(reg, mathFunc),
+                                    style: TextStyle(
+                                        color: balance > 0.0
+                                            ? Colors.green
+                                            : balance < 0.0
+                                                ? Colors.redAccent
+                                                : Colors.white,
                                         fontSize: 16.0,
                                         letterSpacing: 1.5),
                                   );

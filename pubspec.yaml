@@ -24,6 +24,8 @@ dependencies:
   percent_indicator: ^1.0.13
   month_picker_dialog: ^0.0.8
   flutter_picker: ^1.0.8
+  date_range_picker: ^1.0.6
+  flutter_launcher_icons: ^0.7.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -32,6 +34,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: "launcher_icon" 
+  ios: true
+  image_path: "Icons/app_icon/app_icon.png"
 
 
 # For information on the generic Dart part of this file, see the
