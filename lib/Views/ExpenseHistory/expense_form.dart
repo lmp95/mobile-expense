@@ -158,36 +158,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),
                       child: TextFormField(
-                        style: TextStyle(color: Colors.white70),
-                        keyboardType: TextInputType.number,
-                        controller: amount,
-                        validator: (data) => amount.text.length == 0
-                            ? 'Please enter amount'
-                            : null,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white70)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.redAccent)),
-                          labelText: "Amount",
-                          labelStyle: TextStyle(color: Colors.white70),
-                          suffixIcon: Icon(
-                            Icons.monetization_on,
-                            color: Colors.white70,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 16.0,
-                            horizontal: 8.0,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: TextFormField(
                         controller: item,
                         validator: (data) => item.text.length == 0
                             ? 'Please enter description'
@@ -204,6 +174,36 @@ class _ExpenseFormState extends State<ExpenseForm> {
                           labelStyle: TextStyle(color: Colors.white70),
                           suffixIcon: Icon(
                             Icons.receipt,
+                            color: Colors.white70,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0,
+                            horizontal: 8.0,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: TextFormField(
+                        style: TextStyle(color: Colors.white70),
+                        keyboardType: TextInputType.number,
+                        controller: amount,
+                        validator: (data) => amount.text.length == 0
+                            ? 'Please enter amount'
+                            : null,
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.redAccent)),
+                          labelText: "Amount",
+                          labelStyle: TextStyle(color: Colors.white70),
+                          suffixIcon: Icon(
+                            Icons.monetization_on,
                             color: Colors.white70,
                           ),
                           contentPadding: EdgeInsets.symmetric(

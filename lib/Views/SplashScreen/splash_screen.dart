@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _routeToLandingPage() async {
-    var _duration = new Duration(milliseconds: 1500);
+    var _duration = new Duration(milliseconds: 1300);
     return new Timer(_duration, _landingPageRoute);
   }
 
@@ -44,10 +44,20 @@ class _SplashScreenState extends State<SplashScreen> {
         height: device.height,
         width: device.width,
         decoration: BoxDecoration(
-          color: Color(0xFF31373F),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            stops: [0.1, 0.3, 0.75, 0.9],
+            colors: [
+              Color(0xFFFF8050),
+              Color(0xFFFF764F),
+              Colors.redAccent,
+              Colors.red,
+            ],
+          ),
         ),
         child: AnimatedOpacity(
-          duration: Duration(milliseconds: 1000),
+          duration: Duration(milliseconds: 800),
           opacity: _logoOpacity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -55,16 +65,10 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 height: device.height / 3,
                 child: Container(
-                  child: CircleAvatar(
-                    backgroundColor: Color(0xFFF5F5F5),
-                    radius: 48.0,
-                    child: Icon(
-                      Icons.attach_money,
-                      color: Colors.red,
-                      size: 90.0,
-                    ),
-                  ),
-                ),
+                    child: Image.asset(
+                  "Icons/xxxhdpi/app_logo.png",
+                  color: Color(0xFFFFFFFF),
+                )),
               ),
               Container(
                 child: Text(

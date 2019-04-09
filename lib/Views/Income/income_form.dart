@@ -125,6 +125,36 @@ class _IncomeFormState extends State<IncomeForm> {
                     ),
                   ),
                   Container(
+                    child: TextFormField(
+                      style: TextStyle(color: Colors.white70),
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
+                      controller: incomeDesc,
+                      validator: (data) => incomeDesc.text.length == 0
+                          ? 'Please enter description'
+                          : null,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white70)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.redAccent)),
+                        labelText: "Description",
+                        labelStyle: TextStyle(color: Colors.white70),
+                        suffixIcon: Icon(
+                          Icons.receipt,
+                          color: Colors.white70,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 8.0,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: TextFormField(
                       style: TextStyle(color: Colors.white70),
@@ -144,36 +174,6 @@ class _IncomeFormState extends State<IncomeForm> {
                         ),
                         suffixIcon: Icon(
                           Icons.attach_money,
-                          color: Colors.white70,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 16.0,
-                          horizontal: 8.0,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: TextFormField(
-                      style: TextStyle(color: Colors.white70),
-                      keyboardType: TextInputType.text,
-                      textCapitalization: TextCapitalization.words,
-                      controller: incomeDesc,
-                      validator: (data) => incomeDesc.text.length == 0
-                          ? 'Please enter description'
-                          : null,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white70)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.redAccent)),
-                        labelText: "Description",
-                        labelStyle: TextStyle(color: Colors.white70),
-                        suffixIcon: Icon(
-                          Icons.receipt,
                           color: Colors.white70,
                         ),
                         contentPadding: EdgeInsets.symmetric(
