@@ -174,7 +174,7 @@ class _WeekAnalysticsState extends State<WeekAnalystics> {
             body: loading == false
                 ? SingleChildScrollView(
                     child: Container(
-                      height: device.longestSide - kToolbarHeight - 24.0,
+                      height: device.longestSide - kToolbarHeight - 24.0 - 50.0,
                       child: Column(
                         children: <Widget>[
                           Container(

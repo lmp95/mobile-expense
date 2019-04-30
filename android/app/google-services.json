@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "663139377280",
+    "firebase_url": "https://expenager-2ecd9.firebaseio.com",
+    "project_id": "expenager-2ecd9",
+    "storage_bucket": "expenager-2ecd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663139377280:android:5229ecb23d04ec24",
+        "android_client_info": {
+          "package_name": "com.icarus.expenager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663139377280-billrfh77g1lbamso57ksa5150s3g9sj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAe32yWeUS1QeFgoU5Q4yZuziSg8pgN4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "663139377280-billrfh77g1lbamso57ksa5150s3g9sj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

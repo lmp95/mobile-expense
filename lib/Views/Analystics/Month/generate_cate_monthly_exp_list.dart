@@ -23,6 +23,7 @@ generateReport(DateTime _selectedMonth, String category, BuildContext context,
       context: context,
       builder: (builder) {
         return Container(
+          margin: EdgeInsets.only(bottom: 50.0),
           color: Colors.white,
           child: Column(
             children: <Widget>[

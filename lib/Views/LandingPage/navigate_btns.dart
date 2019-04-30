@@ -24,6 +24,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(bottom: 50.0),
                 padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
                 color: Color(0xFF31373F),
                 child: Row(
@@ -181,7 +182,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                       "Analytics",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: device.longestSide > 600 ? 18.0 : 16.0),
+                          fontSize: device.longestSide > 700 ? 18.0 : 16.0),
                     ),
                   ),
                 ],
@@ -235,7 +236,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize:
-                                    device.longestSide > 600 ? 16.0 : 13.0),
+                                    device.longestSide > 700 ? 16.0 : 13.0),
                           ),
                         ),
                       ],
@@ -280,7 +281,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize:
-                                    device.longestSide > 600 ? 16.0 : 13.0),
+                                    device.longestSide > 700 ? 16.0 : 13.0),
                           ),
                         ),
                       ],

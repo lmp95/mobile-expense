@@ -125,6 +125,7 @@ class _IncomeFormState extends State<IncomeForm> {
                     ),
                   ),
                   Container(
+                    padding: const EdgeInsets.only(bottom: 12.0),
                     child: TextFormField(
                       style: TextStyle(color: Colors.white70),
                       keyboardType: TextInputType.text,
@@ -155,7 +156,6 @@ class _IncomeFormState extends State<IncomeForm> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.only(bottom: 12.0),
                     child: TextFormField(
                       style: TextStyle(color: Colors.white70),
                       keyboardType: TextInputType.number,

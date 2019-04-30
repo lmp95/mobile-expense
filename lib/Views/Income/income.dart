@@ -122,192 +122,202 @@ class _IncomeState extends State<Income> {
             elevation: 0.0,
             title: Text("Income"),
           ),
-          body: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.all(0.0),
-                color: Color.fromRGBO(0, 0, 0, 0.05),
-                width: dev.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      height: 75.0,
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            child: Text(
-                              _dtFormat.format(_currentDate).toUpperCase(),
-                              style: TextStyle(
-                                  color: Color(0xFF31373F),
-                                  fontSize: dev.longestSide > 600 ? 24.0 : 20.0,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 75.0,
-                      padding: EdgeInsets.only(right: 16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(bottom: 4.0),
-                            child: Text(
-                              "Total Income".toUpperCase(),
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: dev.longestSide > 600 ? 12.0 : 10.0,
-                                  letterSpacing: 1.25,
-                                  fontWeight: FontWeight.w900),
-                            ),
-                          ),
-                          Row(
+          body: SingleChildScrollView(
+            child: Container(
+              height: dev.longestSide - kToolbarHeight - 24.0 - 50.0,
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(0.0),
+                    color: Color.fromRGBO(0, 0, 0, 0.05),
+                    width: dev.width,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 75.0,
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                child: Icon(
-                                  Icons.attach_money,
-                                  color: Colors.red,
-                                  size: 28.0,
-                                ),
-                              ),
-                              Container(
-                                child: FutureBuilder(
-                                  future: db.getMonthlyIncome(getMonth),
-                                  builder: (buildcontext, snapshot) {
-                                    if (snapshot.hasData &&
-                                        snapshot.data.length != 0) {
-                                      _totalIncome(snapshot.data);
-                                      return Text(
-                                        totalIncomeAmt
-                                            .toString()
-                                            .replaceAllMapped(reg, mathFunc),
-                                        style: TextStyle(
-                                            color: Color(0xFF31373F),
-                                            fontSize: dev.longestSide > 600
-                                                ? 20.0
-                                                : 18.0,
-                                            fontWeight: FontWeight.w100),
-                                      );
-                                    } else {
-                                      return Text(
-                                        "0.0",
-                                        style: TextStyle(
-                                            color: Color(0xFF31373F),
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.w100),
-                                      );
-                                    }
-                                  },
+                                child: Text(
+                                  _dtFormat.format(_currentDate).toUpperCase(),
+                                  style: TextStyle(
+                                      color: Color(0xFF31373F),
+                                      fontSize:
+                                          dev.longestSide > 600 ? 24.0 : 20.0,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      child: Text(
-                        "Monthly Income List",
-                        style: TextStyle(
-                            fontSize: dev.longestSide > 600 ? 20.0 : 16.0),
-                      ),
-                    ),
-                    FlatButton(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      padding: EdgeInsets.all(0.0),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => IncomeForm(
-                                  dt: _currentDate,
+                        ),
+                        Container(
+                          height: 75.0,
+                          padding: EdgeInsets.only(right: 16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(bottom: 4.0),
+                                child: Text(
+                                  "Total Income".toUpperCase(),
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize:
+                                          dev.longestSide > 600 ? 12.0 : 10.0,
+                                      letterSpacing: 1.25,
+                                      fontWeight: FontWeight.w900),
                                 ),
-                          ),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            (Icons.add),
-                          ),
-                          Text(
-                            "Add Income",
-                            style: TextStyle(
-                                fontSize: dev.longestSide > 600 ? 16.0 : 14.0),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: _loading == true
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : FutureBuilder(
-                        future: fetchIncome(getMonth),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && snapshot.data.length != 0) {
-                            return ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (buildcontext, i) {
-                                return Slidable(
-                                  controller: slidableController,
-                                  closeOnScroll: false,
-                                  actionExtentRatio: 0.125,
-                                  delegate: SlidableScrollDelegate(),
-                                  child: Container(
-                                    color: Color(0xB331373F),
-                                    child: ListTile(
-                                      title: Text(
-                                        snapshot.data[i].description,
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      subtitle: Text(
-                                        _displaydt.format(DateTime.parse(
-                                            snapshot.data[i].date)),
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      trailing: Text(
-                                        "\$ " +
-                                            snapshot.data[i].amount
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: Icon(
+                                      Icons.attach_money,
+                                      color: Colors.red,
+                                      size: 28.0,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: FutureBuilder(
+                                      future: db.getMonthlyIncome(getMonth),
+                                      builder: (buildcontext, snapshot) {
+                                        if (snapshot.hasData &&
+                                            snapshot.data.length != 0) {
+                                          _totalIncome(snapshot.data);
+                                          return Text(
+                                            totalIncomeAmt
                                                 .toString()
                                                 .replaceAllMapped(
                                                     reg, mathFunc),
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16.0),
-                                      ),
+                                            style: TextStyle(
+                                                color: Color(0xFF31373F),
+                                                fontSize: dev.longestSide > 600
+                                                    ? 20.0
+                                                    : 18.0,
+                                                fontWeight: FontWeight.w100),
+                                          );
+                                        } else {
+                                          return Text(
+                                            "0.0",
+                                            style: TextStyle(
+                                                color: Color(0xFF31373F),
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.w100),
+                                          );
+                                        }
+                                      },
                                     ),
                                   ),
-                                  secondaryActions: <Widget>[
-                                    Container(
-                                      color: Color(0xB331373F),
-                                      child: SlideAction(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder:
-                                                      (BuildContext context) =>
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            "Monthly Income List",
+                            style: TextStyle(
+                                fontSize: dev.longestSide > 600 ? 20.0 : 16.0),
+                          ),
+                        ),
+                        FlatButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          padding: EdgeInsets.all(0.0),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => IncomeForm(
+                                      dt: _currentDate,
+                                    ),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                (Icons.add),
+                              ),
+                              Text(
+                                "Add Income",
+                                style: TextStyle(
+                                    fontSize:
+                                        dev.longestSide > 600 ? 16.0 : 14.0),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: _loading == true
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : FutureBuilder(
+                            future: fetchIncome(getMonth),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData &&
+                                  snapshot.data.length != 0) {
+                                return ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (buildcontext, i) {
+                                    return Slidable(
+                                      controller: slidableController,
+                                      closeOnScroll: false,
+                                      actionExtentRatio: 0.125,
+                                      delegate: SlidableScrollDelegate(),
+                                      child: Container(
+                                        color: Color(0xB331373F),
+                                        child: ListTile(
+                                          title: Text(
+                                            snapshot.data[i].description,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          subtitle: Text(
+                                            _displaydt.format(DateTime.parse(
+                                                snapshot.data[i].date)),
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          trailing: Text(
+                                            "\$ " +
+                                                snapshot.data[i].amount
+                                                    .toString()
+                                                    .replaceAllMapped(
+                                                        reg, mathFunc),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16.0),
+                                          ),
+                                        ),
+                                      ),
+                                      secondaryActions: <Widget>[
+                                        Container(
+                                          color: Color(0xB331373F),
+                                          child: SlideAction(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
                                                           IncomeForm(
                                                             dt: DateTime.parse(
                                                                 snapshot.data[i]
@@ -315,73 +325,81 @@ class _IncomeState extends State<Income> {
                                                             editIncome: snapshot
                                                                 .data[i],
                                                           )));
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(8.0),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0),
-                                              color: Colors.grey[350]),
-                                          child: Icon(
-                                            Icons.edit,
-                                            color: Colors.black54,
-                                            size: 24.0,
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50.0),
+                                                  color: Colors.grey[350]),
+                                              child: Icon(
+                                                Icons.edit,
+                                                color: Colors.black54,
+                                                size: 24.0,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    Container(
-                                      color: Color(0xB331373F),
-                                      child: SlideAction(
-                                        onTap: () {
-                                          _deleteIncome(snapshot.data[i].id);
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(8.0),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0),
-                                              color: Colors.redAccent),
-                                          child: Icon(
-                                            Icons.delete_outline,
-                                            color: Colors.white,
-                                            size: 24.0,
+                                        Container(
+                                          color: Color(0xB331373F),
+                                          child: SlideAction(
+                                            onTap: () {
+                                              _deleteIncome(
+                                                  snapshot.data[i].id);
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50.0),
+                                                  color: Colors.redAccent),
+                                              child: Icon(
+                                                Icons.delete_outline,
+                                                color: Colors.white,
+                                                size: 24.0,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
+                                      ],
+                                    );
+                                  },
                                 );
-                              },
-                            );
-                          } else {
-                            return Container(
-                              child: Center(
-                                child: Text(
-                                  "No Income List",
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-              )
-            ],
-          ),
-          floatingActionButton: FloatingActionButton.extended(
-            tooltip: "Choose Date",
-            backgroundColor: Colors.red,
-            icon: Icon(
-              Icons.calendar_today,
-              color: Colors.white,
+                              } else {
+                                return Container(
+                                  child: Center(
+                                    child: Text(
+                                      "No Income List",
+                                      style: TextStyle(fontSize: 16.0),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                  )
+                ],
+              ),
             ),
-            onPressed: () {
-              _showModalSheet();
-            },
-            label: Text(
-              "Month",
-              style: TextStyle(color: Colors.white, fontSize: 16.0),
+          ),
+          floatingActionButton: Container(
+            margin: EdgeInsets.only(bottom: 50.0),
+            child: FloatingActionButton.extended(
+              tooltip: "Choose Date",
+              backgroundColor: Colors.red,
+              icon: Icon(
+                Icons.calendar_today,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                _showModalSheet();
+              },
+              label: Text(
+                "Month",
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
             ),
           ),
         );

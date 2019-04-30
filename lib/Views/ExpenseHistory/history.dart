@@ -198,7 +198,7 @@ class _HistoryState extends State<History> {
 
   @override
   Widget build(BuildContext context) {
-    var devHeight = MediaQuery.of(context).size.height - kToolbarHeight - 24;
+    var devHeight = MediaQuery.of(context).size;
     return OrientationBuilder(
       builder: (context, orientation) {
         return Scaffold(
@@ -208,7 +208,7 @@ class _HistoryState extends State<History> {
           body: SingleChildScrollView(
             child: Container(
               height: orientation == Orientation.portrait
-                  ? devHeight
+                  ? devHeight.longestSide - kToolbarHeight - 24.0 - 50.0
                   : MediaQuery.of(context).size.longestSide / 1.4,
               child: Column(
                 mainAxisSize: MainAxisSize.min,

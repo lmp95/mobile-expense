@@ -48,6 +48,7 @@ class _TodayExpenseState extends State<TodayExpense> {
         context: context,
         builder: (builder) {
           return Container(
+            margin: EdgeInsets.only(bottom: 50.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20.0),
@@ -148,7 +149,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                         child: Text(
                           "Today Expense",
                           style: TextStyle(
-                              fontSize: device.height <= 600 &&
+                              fontSize: device.height <= 700 &&
                                       orientation == Orientation.portrait
                                   ? 14.0
                                   : 18.0,
@@ -206,7 +207,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                   'Last Expense'.toUpperCase(),
                                   style: TextStyle(
                                       color: Colors.redAccent,
-                                      fontSize: device.height <= 600 &&
+                                      fontSize: device.height <= 700 &&
                                               orientation ==
                                                   Orientation.portrait
                                           ? 12.0
@@ -226,7 +227,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                           price,
                                           style: TextStyle(
                                             color: Color(0xFF31373F),
-                                            fontSize: device.height <= 600 &&
+                                            fontSize: device.height <= 700 &&
                                                     orientation ==
                                                         Orientation.portrait
                                                 ? 12.0
@@ -239,7 +240,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                           price,
                                           style: TextStyle(
                                             color: Color(0xFF31373F),
-                                            fontSize: device.height <= 600 &&
+                                            fontSize: device.height <= 700 &&
                                                     orientation ==
                                                         Orientation.portrait
                                                 ? 12.0
@@ -262,7 +263,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                           item,
                                           style: TextStyle(
                                             color: Color(0xFF31373F),
-                                            fontSize: device.height <= 600 &&
+                                            fontSize: device.height <= 700 &&
                                                     orientation ==
                                                         Orientation.portrait
                                                 ? 14.0
@@ -275,7 +276,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                           item,
                                           style: TextStyle(
                                             color: Color(0xFF31373F),
-                                            fontSize: device.height <= 600 &&
+                                            fontSize: device.height <= 700 &&
                                                     orientation ==
                                                         Orientation.portrait
                                                 ? 14.0
@@ -301,7 +302,7 @@ class _TodayExpenseState extends State<TodayExpense> {
                                         "Total Expense".toUpperCase(),
                                         style: TextStyle(
                                             color: Colors.redAccent,
-                                            fontSize: device.height <= 600 &&
+                                            fontSize: device.height <= 700 &&
                                                     orientation ==
                                                         Orientation.portrait
                                                 ? 13.0
@@ -375,7 +376,10 @@ class _TodayExpenseState extends State<TodayExpense> {
                               color: Colors.redAccent,
                               child: Text("Add Expense",
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16.0)),
+                                      color: Colors.white,
+                                      fontSize: device.longestSide > 700
+                                          ? 16.0
+                                          : 13.0)),
                               onPressed: () {
                                 Navigator.push(
                                     context,
@@ -397,7 +401,10 @@ class _TodayExpenseState extends State<TodayExpense> {
                               color: Colors.redAccent,
                               child: Text("Expense List",
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16.0)),
+                                      color: Colors.white,
+                                      fontSize: device.longestSide > 700
+                                          ? 16.0
+                                          : 13.0)),
                               onPressed: _showModalSheet,
                             ),
                           ),

@@ -15,6 +15,7 @@ void showModalSheet(
     context: context,
     builder: (builder) {
       return Container(
+        margin: EdgeInsets.only(bottom: 50.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),

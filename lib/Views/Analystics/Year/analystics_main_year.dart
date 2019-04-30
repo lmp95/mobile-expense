@@ -208,102 +208,106 @@ class _YearlyAnalysticsMainState extends State<YearlyAnalysticsMain> {
           ),
           body: loading == false
               ? SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 16.0, left: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Annual Expense",
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 16.0),
-                            ),
-                            FlatButton(
-                              padding: EdgeInsets.all(0.0),
-                              color: Colors.redAccent,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              onPressed: () {
-                                _showYearDialog();
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    _currentYear,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16.0),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Icon(
-                                      Icons.date_range,
-                                      color: Colors.white,
-                                      size: 18.0,
-                                    ),
-                                  )
-                                ],
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    height: device.longestSide,
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 16.0, left: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Annual Expense",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16.0),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(8.0),
-                        height: device.longestSide / 3,
-                        child: Stack(
-                          children: [
-                            annualTotal == 0.0
-                                ? Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "No Data Available",
+                              FlatButton(
+                                padding: EdgeInsets.all(0.0),
+                                color: Colors.redAccent,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0)),
+                                onPressed: () {
+                                  _showYearDialog();
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      _currentYear,
                                       style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.0,
-                                      ),
+                                          color: Colors.white, fontSize: 16.0),
                                     ),
-                                  )
-                                : Container(),
-                            charts.BarChart(
-                              dataList,
-                              domainAxis: charts.OrdinalAxisSpec(
-                                renderSpec: charts.SmallTickRendererSpec(
-                                  labelStyle: new charts.TextStyleSpec(
-                                      fontSize: 10,
-                                      color: charts.MaterialPalette.white),
-                                  lineStyle: new charts.LineStyleSpec(
-                                      color: charts.MaterialPalette.white),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Icon(
+                                        Icons.date_range,
+                                        color: Colors.white,
+                                        size: 18.0,
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              primaryMeasureAxis: charts.NumericAxisSpec(
-                                renderSpec: charts.GridlineRendererSpec(
-                                  labelStyle: new charts.TextStyleSpec(
-                                    fontSize: 10,
-                                    color: charts.MaterialPalette.white,
-                                  ),
-                                  lineStyle: new charts.LineStyleSpec(
-                                    thickness: 0,
-                                    color: charts.MaterialPalette.white,
-                                  ),
-                                ),
-                              ),
-                              barGroupingType: charts.BarGroupingType.stacked,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      YearlyCategoryList(
-                        selectedYear: _currentYear,
-                      ),
-                      AnnualChart(
-                        chart: chart,
-                        pieChart: pieChart,
-                        annualTotal: annualTotal,
-                      )
-                    ],
+                        Container(
+                          margin: EdgeInsets.all(8.0),
+                          height: device.longestSide / 3,
+                          child: Stack(
+                            children: [
+                              annualTotal == 0.0
+                                  ? Container(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "No Data Available",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              charts.BarChart(
+                                dataList,
+                                domainAxis: charts.OrdinalAxisSpec(
+                                  renderSpec: charts.SmallTickRendererSpec(
+                                    labelStyle: new charts.TextStyleSpec(
+                                        fontSize: 10,
+                                        color: charts.MaterialPalette.white),
+                                    lineStyle: new charts.LineStyleSpec(
+                                        color: charts.MaterialPalette.white),
+                                  ),
+                                ),
+                                primaryMeasureAxis: charts.NumericAxisSpec(
+                                  renderSpec: charts.GridlineRendererSpec(
+                                    labelStyle: new charts.TextStyleSpec(
+                                      fontSize: 10,
+                                      color: charts.MaterialPalette.white,
+                                    ),
+                                    lineStyle: new charts.LineStyleSpec(
+                                      thickness: 0,
+                                      color: charts.MaterialPalette.white,
+                                    ),
+                                  ),
+                                ),
+                                barGroupingType: charts.BarGroupingType.stacked,
+                              ),
+                            ],
+                          ),
+                        ),
+                        YearlyCategoryList(
+                          selectedYear: _currentYear,
+                        ),
+                        AnnualChart(
+                          chart: chart,
+                          pieChart: pieChart,
+                          annualTotal: annualTotal,
+                        )
+                      ],
+                    ),
                   ),
                 )
               : Center(

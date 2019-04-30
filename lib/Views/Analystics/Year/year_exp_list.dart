@@ -29,6 +29,7 @@ void showYearExpList(context, category, color, selectedYear) {
       context: context,
       builder: (BuildContext bc) {
         return Container(
+          margin: EdgeInsets.only(bottom: 50.0),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[

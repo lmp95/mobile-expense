@@ -5,6 +5,9 @@ import '../../Views/LandingPage/today_expense.dart';
 import '../../Database/expense_db.dart';
 import '../../Views/LandingPage/navigate_btns.dart';
 import '../LandingPage/this_month_expense.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+
+const String testDevice = '';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -27,13 +30,36 @@ class _LandingPageState extends State<LandingPage> {
   List<String> setDateList = [];
 
   @override
+  void dispose() {
+    myBanner?.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     dbProvider.initDb();
   }
 
+  BannerAd myBanner = BannerAd(
+    adUnitId: 'ca-app-pub-3019709491358398/1215457405',
+    size: AdSize.smartBanner,
+    targetingInfo: targetInfo,
+    listener: (MobileAdEvent event) {
+      print("BannerAd event is $event");
+    },
+  );
+
   @override
   Widget build(BuildContext context) {
+    FirebaseAdMob.instance
+        .initialize(appId: 'ca-app-pub-3019709491358398~8563588097')
+        .then((result) {
+      myBanner
+        ..load()
+        ..show(anchorOffset: 0.0, anchorType: AnchorType.bottom);
+    });
+    var dev = MediaQuery.of(context).size;
     return OrientationBuilder(
       builder: (context, orientation) {
         return Scaffold(
@@ -44,6 +70,7 @@ class _LandingPageState extends State<LandingPage> {
           backgroundColor: Color(0xFF31373F),
           body: SingleChildScrollView(
             child: Container(
+              height: dev.longestSide - 30.0,
               color: Color(0xFF31373F),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,3 +87,13 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 }
+
+MobileAdTargetingInfo targetInfo = MobileAdTargetingInfo(
+  keywords: <String>['expense', 'expenager'],
+  contentUrl: 'https://flutter.io',
+  birthday: DateTime.now(),
+  childDirected: false,
+  designedForFamilies: false,
+  gender: MobileAdGender.unknown,
+  testDevices: <String>[],
+);

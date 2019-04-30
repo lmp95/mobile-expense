@@ -208,7 +208,8 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                               "Total Income".toUpperCase(),
                               style: TextStyle(
                                   color: Colors.greenAccent,
-                                  fontSize: 12.0,
+                                  fontSize:
+                                      device.longestSide > 700 ? 12.0 : 10.0,
                                   letterSpacing: 2.0),
                             ),
                           ),
@@ -232,7 +233,9 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                                             .replaceAllMapped(reg, mathFunc),
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16.0,
+                                        fontSize: device.longestSide > 700
+                                            ? 16.0
+                                            : 13.0,
                                         letterSpacing: 1.5),
                                   ),
                                 );
@@ -243,7 +246,9 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                                     "\$ 0.0",
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16.0,
+                                        fontSize: device.longestSide > 700
+                                            ? 16.0
+                                            : 13.0,
                                         letterSpacing: 1.5),
                                   ),
                                 );
@@ -263,7 +268,8 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                               "Total Expense".toUpperCase(),
                               style: TextStyle(
                                   color: Colors.redAccent,
-                                  fontSize: 12.0,
+                                  fontSize:
+                                      device.longestSide > 700 ? 12.0 : 10.0,
                                   letterSpacing: 2.0),
                             ),
                           ),
@@ -284,7 +290,9 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                                             .replaceAllMapped(reg, mathFunc),
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16.0,
+                                        fontSize: device.longestSide > 700
+                                            ? 16.0
+                                            : 13.0,
                                         letterSpacing: 1.5),
                                   );
                                 } else {
@@ -292,7 +300,9 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                                     "\$0.0",
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16.0,
+                                        fontSize: device.longestSide > 700
+                                            ? 16.0
+                                            : 13.0,
                                         letterSpacing: 1.5),
                                   );
                                 }
@@ -312,7 +322,8 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                               "Balance".toUpperCase(),
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12.0,
+                                  fontSize:
+                                      device.longestSide > 700 ? 12.0 : 10.0,
                                   letterSpacing: 2.0),
                             ),
                           ),
@@ -334,7 +345,9 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                                             : balance < 0.0
                                                 ? Colors.redAccent
                                                 : Colors.white,
-                                        fontSize: 16.0,
+                                        fontSize: device.longestSide > 700
+                                            ? 16.0
+                                            : 13.0,
                                         letterSpacing: 1.5),
                                   );
                                 } else {
@@ -342,7 +355,9 @@ class _ThisMonthExpenseState extends State<ThisMonthExpense> {
                                     "\$0.0",
                                     style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16.0,
+                                        fontSize: device.longestSide > 700
+                                            ? 16.0
+                                            : 13.0,
                                         letterSpacing: 1.5),
                                   );
                                 }

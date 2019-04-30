@@ -15,6 +15,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
 
   @override
   Widget build(BuildContext context) {
+    var dev = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -49,7 +50,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
                           "Clothing",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: dev.longestSide > 700 ? 16.0 : 12.0,
                           ),
                         ),
                       )
@@ -83,7 +84,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
                           "Entertainment",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: dev.longestSide > 700 ? 16.0 : 12.0,
                           ),
                         ),
                       )
@@ -117,7 +118,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
                           "Food",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: dev.longestSide > 700 ? 16.0 : 12.0,
                           ),
                         ),
                       )
@@ -151,7 +152,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
                           "Gifts/Donations",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: dev.longestSide > 700 ? 16.0 : 12.0,
                           ),
                         ),
                       )
@@ -190,7 +191,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
                           "Medical/Healthcare",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: dev.longestSide > 700 ? 16.0 : 12.0,
                           ),
                         ),
                       )
@@ -224,7 +225,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
                           "Personal",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: dev.longestSide > 700 ? 16.0 : 12.0,
                           ),
                         ),
                       )
@@ -258,7 +259,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
                           "Transportation",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: dev.longestSide > 700 ? 16.0 : 12.0,
                           ),
                         ),
                       )
@@ -292,7 +293,7 @@ class _YearlyCategoryListState extends State<YearlyCategoryList> {
                           "Utilities",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: dev.longestSide > 700 ? 16.0 : 12.0,
                           ),
                         ),
                       )
