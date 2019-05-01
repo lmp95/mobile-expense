@@ -24,8 +24,7 @@ class _NavigateBtnState extends State<NavigateBtn> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(bottom: 50.0),
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                padding: EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 66.0),
                 color: Color(0xFF31373F),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -90,7 +90,7 @@ class _LandingPageState extends State<LandingPage> {
 
 MobileAdTargetingInfo targetInfo = MobileAdTargetingInfo(
   keywords: <String>['expense', 'expenager'],
-  contentUrl: 'https://flutter.io',
+  contentUrl: '',
   birthday: DateTime.now(),
   childDirected: false,
   designedForFamilies: false,

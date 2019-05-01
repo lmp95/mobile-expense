@@ -208,7 +208,7 @@ class _HistoryState extends State<History> {
           body: SingleChildScrollView(
             child: Container(
               height: orientation == Orientation.portrait
-                  ? devHeight.longestSide - kToolbarHeight - 24.0 - 50.0
+                  ? devHeight.longestSide - kToolbarHeight - 24.0
                   : MediaQuery.of(context).size.longestSide / 1.4,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -391,6 +391,7 @@ class _HistoryState extends State<History> {
                     ),
                   ),
                   Container(
+                      padding: EdgeInsets.only(bottom: 50.0),
                       color: Color(0xFF31373F),
                       child: FutureBuilder(
                         future: fetchExpense(_dateFormat.parse(selectedDate)),
