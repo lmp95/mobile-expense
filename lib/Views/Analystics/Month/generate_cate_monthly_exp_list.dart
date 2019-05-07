@@ -23,7 +23,6 @@ generateReport(DateTime _selectedMonth, String category, BuildContext context,
       context: context,
       builder: (builder) {
         return Container(
-          margin: EdgeInsets.only(bottom: 50.0),
           color: Colors.white,
           child: Column(
             children: <Widget>[
@@ -82,6 +81,7 @@ generateReport(DateTime _selectedMonth, String category, BuildContext context,
                 ),
               ),
               Container(
+                padding: EdgeInsets.only(bottom: 50.0),
                 margin: EdgeInsets.symmetric(horizontal: 16.0),
                 child: ListTile(
                   title: Text("Total"),

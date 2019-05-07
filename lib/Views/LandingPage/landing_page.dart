@@ -42,7 +42,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   BannerAd myBanner = BannerAd(
-    adUnitId: 'ca-app-pub-3019709491358398/1215457405',
+    adUnitId: 'ca-app-pub-3019709491358398/9141763478',
     size: AdSize.smartBanner,
     targetingInfo: targetInfo,
     listener: (MobileAdEvent event) {
@@ -89,7 +89,7 @@ class _LandingPageState extends State<LandingPage> {
 }
 
 MobileAdTargetingInfo targetInfo = MobileAdTargetingInfo(
-  keywords: <String>['expense', 'expenager'],
+  keywords: <String>['expense', 'finance'],
   contentUrl: '',
   birthday: DateTime.now(),
   childDirected: false,
