@@ -81,7 +81,7 @@ generateReport(DateTime _selectedMonth, String category, BuildContext context,
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(bottom: 50.0),
+                padding: EdgeInsets.only(bottom: 100.0),
                 margin: EdgeInsets.symmetric(horizontal: 16.0),
                 child: ListTile(
                   title: Text("Total"),

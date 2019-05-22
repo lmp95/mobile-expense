@@ -46,7 +46,7 @@ void showModalSheet(
               ),
             ),
             Container(
-                padding: EdgeInsets.only(bottom: 50.0),
+                padding: EdgeInsets.only(bottom: 100.0),
                 color: color,
                 child: ListTile(
                   title: Text(

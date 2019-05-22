@@ -209,7 +209,7 @@ class _YearlyAnalysticsMainState extends State<YearlyAnalysticsMain> {
           body: loading == false
               ? SingleChildScrollView(
                   child: Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
+                    margin: EdgeInsets.only(bottom: 50.0),
                     height: device.longestSide,
                     child: Column(
                       children: [

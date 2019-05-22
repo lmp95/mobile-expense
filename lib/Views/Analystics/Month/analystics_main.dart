@@ -107,7 +107,7 @@ class _AnalysticsMainState extends State<AnalysticsMain> {
           ),
           body: SingleChildScrollView(
             child: Container(
-              height: dev.longestSide - kToolbarHeight - 24.0 - 50.0,
+              height: dev.longestSide - kToolbarHeight - 24.0 - 90.0,
               child: Column(
                 children: <Widget>[
                   Container(

@@ -48,7 +48,7 @@ class _TodayExpenseState extends State<TodayExpense> {
         context: context,
         builder: (builder) {
           return Container(
-            padding: EdgeInsets.only(bottom: 50.0),
+            padding: EdgeInsets.only(bottom: 100.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20.0),

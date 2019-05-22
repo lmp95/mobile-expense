@@ -391,7 +391,7 @@ class _HistoryState extends State<History> {
                     ),
                   ),
                   Container(
-                      padding: EdgeInsets.only(bottom: 50.0),
+                      padding: EdgeInsets.only(bottom: 100.0),
                       color: Color(0xFF31373F),
                       child: FutureBuilder(
                         future: fetchExpense(_dateFormat.parse(selectedDate)),
